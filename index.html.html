@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circular Motion &mdash; CIE 9702 Interactive Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+:root{
+  --navy-950:#071223;
+  --navy-900:#0A1B33;
+  --navy-800:#102A4C;
+  --navy-700:#1B3B63;
+  --teal-500:#0E9488;
+  --teal-400:#22B8AA;
+  --teal-300:#5EEAD4;
+  --gold-600:#A9821B;
+  --gold-500:#C9A227;
+  --gold-300:#E8CD6B;
+  --paper:#F7F5EE;
+  --paper-dim:#EDEADF;
+  --ink:#0A1B33;
+  --muted:#5B6B82;
+  --danger:#B4483C;
+  --line:rgba(10,27,51,0.12);
+
+  --arrow-weight:#0A1B33;
+  --arrow-tension:#0E9488;
+  --arrow-normal:#0E9488;
+  --arrow-friction:#B4483C;
+  --arrow-net:#C9A227;
+  --arrow-velocity:#0E9488;
+  --arrow-accel:#C9A227;
+
+  --font-display:'Fraunces', serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold-300);color:var(--navy-900);}
+a{color:inherit;}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0 0 0.4em 0;letter-spacing:-0.01em;}
+h1{font-size:clamp(1.9rem,3.4vw,2.8rem);}
+h2{font-size:clamp(1.4rem,2.4vw,1.9rem);}
+h3{font-size:1.15rem;font-weight:600;}
+p{line-height:1.65;color:var(--navy-800);}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--teal-500);
+  font-weight:600;
+}
+button{font-family:var(--font-body);cursor:pointer;}
+input[type=range]{accent-color:var(--teal-500);}
+
+/* ===== Shell layout ===== */
+.shell{
+  display:grid;
+  grid-template-columns:248px 1fr;
+  min-height:100vh;
+}
+.railnav{
+  background:var(--navy-950);
+  color:#EAF0F6;
+  padding:1.6rem 1.1rem;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:1.4rem;
+}
+.brand{
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  line-height:1.25;
+  color:#fff;
+  padding-bottom:0.9rem;
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+.brand small{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.12em;
+  color:var(--teal-300);
+  text-transform:uppercase;
+  margin-top:0.3rem;
+}
+.brand .prepared-by{
+  display:block;
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:500;
+  font-size:0.8rem;
+  letter-spacing:0.01em;
+  color:var(--gold-300);
+  margin-top:0.55rem;
+  text-transform:none;
+}
+.nav-group-label{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:rgba(234,240,246,0.45);
+  margin:0.2rem 0 0.3rem 0.15rem;
+}
+.nav-group-label.beyond{color:var(--gold-300);}
+.navlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.15rem;}
+.navlist button{
+  all:unset;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  padding:0.55rem 0.6rem;
+  border-radius:8px;
+  font-size:0.88rem;
+  color:rgba(234,240,246,0.78);
+  transition:background 0.15s ease, color 0.15s ease;
+}
+.navlist button:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.navlist button.active{background:var(--navy-800);color:#fff;}
+.navlist button.active .dot{background:var(--teal-300);}
+.navlist.beyond button.active{background:rgba(201,162,39,0.18);}
+.navlist.beyond button.active .dot{background:var(--gold-300);}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(234,240,246,0.35);
+  flex:none;
+}
+.navlist button .status{
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  color:rgba(234,240,246,0.4);
+}
+.progress-track{
+  margin-top:auto;
+  padding-top:1rem;
+  border-top:1px solid rgba(255,255,255,0.12);
+}
+.progress-bar{
+  height:4px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.1);
+  overflow:hidden;
+  margin-top:0.5rem;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal-400),var(--gold-400,var(--gold-500)));
+  width:0%;
+  transition:width 0.4s ease;
+}
+.progress-label{font-family:var(--font-mono);font-size:0.68rem;color:rgba(234,240,246,0.55);}
+
+main{padding:0;min-width:0;}
+.page{display:none;}
+.page.active{display:block;}
+.page-inner{max-width:960px;margin:0 auto;padding:3rem 2.4rem 5rem;}
+
+/* ===== Hero (page 1) ===== */
+.hero{
+  background:radial-gradient(circle at 18% 20%, var(--navy-800), var(--navy-950) 70%);
+  color:#EAF0F6;
+  padding:3.4rem 2.4rem 3rem;
+  border-bottom:1px solid var(--line);
+}
+.hero-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1.1fr 0.9fr;gap:2.4rem;align-items:center;}
+.hero h1{color:#fff;}
+.hero p.lede{color:rgba(234,240,246,0.75);font-size:1.02rem;max-width:46ch;}
+.hero-signature{
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+  margin-top:1.6rem;
+}
+.hero-signature .rule{
+  width:34px;height:1px;
+  background:linear-gradient(90deg, var(--gold-500), transparent);
+}
+.hero-signature .credit{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:500;
+  font-size:1.02rem;
+  color:var(--gold-300);
+  letter-spacing:0.01em;
+}
+.hero-signature .credit b{
+  font-style:italic;
+  font-weight:600;
+  color:var(--gold-500);
+  background:linear-gradient(90deg, var(--gold-300), var(--gold-500));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-canvas-wrap{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;
+  padding:1rem;
+}
+canvas{display:block;max-width:100%;}
+
+/* ===== Content blocks ===== */
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:1.5rem 1.6rem;
+  margin:1.4rem 0;
+}
+.section-num{
+  font-family:var(--font-mono);
+  color:var(--teal-500);
+  font-size:0.78rem;
+  font-weight:600;
+}
+.eq-table{width:100%;border-collapse:collapse;margin:0.8rem 0;}
+.eq-table th,.eq-table td{
+  text-align:left;
+  padding:0.55rem 0.7rem;
+  border-bottom:1px solid var(--line);
+  font-size:0.92rem;
+}
+.eq-table th{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.eq-table td:nth-child(2){font-family:var(--font-mono);color:var(--navy-900);white-space:nowrap;}
+.formula-group-title{
+  display:flex;align-items:baseline;justify-content:space-between;gap:0.8rem;
+  font-family:var(--font-display);font-size:1rem;color:var(--navy-900);
+  margin:1.3rem 0 0.2rem;padding-top:0.9rem;border-top:1px solid var(--line);
+}
+.formula-group-title:first-of-type{border-top:none;padding-top:0;margin-top:0.8rem;}
+.formula-group-tag{
+  font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--teal-500);font-weight:600;white-space:nowrap;
+}
+@media (max-width:520px){.eq-table{font-size:0.85rem;}.eq-table td:nth-child(2){white-space:normal;}}
+.formula-box{
+  background:var(--navy-950);
+  color:#fff;
+  border-radius:12px;
+  padding:1.1rem 1.3rem;
+  margin:1rem 0;
+  font-size:1.05rem;
+  overflow-x:auto;
+}
+.formula-box .katex{color:#fff;}
+
+.callout{
+  border-left:3px solid var(--gold-500);
+  background:#FBF6E6;
+  padding:0.9rem 1.1rem;
+  border-radius:0 10px 10px 0;
+  margin:1.1rem 0;
+  font-size:0.92rem;
+}
+.callout strong{display:block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-600);margin-bottom:0.3rem;}
+
+.callout.misconception{border-left-color:var(--danger);background:#FBEEEC;}
+.callout.misconception strong{color:var(--danger);}
+
+/* ===== Definitions list (Page 1) ===== */
+.def-list{margin:1.1rem 0;}
+.def-item{
+  display:grid;
+  grid-template-columns:230px 1fr;
+  gap:1rem;
+  padding:0.9rem 0;
+  border-bottom:1px solid var(--line);
+}
+.def-item:last-child{border-bottom:none;}
+.def-term{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1rem;
+  color:var(--navy-900);
+}
+.def-term .sym{
+  font-family:var(--font-mono);
+  font-weight:600;
+  color:var(--teal-500);
+  margin-left:0.35rem;
+}
+.def-body{font-size:0.9rem;color:var(--navy-800);line-height:1.6;}
+@media (max-width:720px){.def-item{grid-template-columns:1fr;gap:0.3rem;}}
+
+/* ===== Step-by-step geometric proof diagrams ===== */
+.proof-step{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:1.3rem;
+  align-items:center;
+  background:var(--paper-dim);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:1.1rem;
+  margin-bottom:1.1rem;
+}
+.proof-diagram{
+  background:var(--navy-950);
+  border-radius:10px;
+  padding:0.7rem;
+  display:flex;flex-direction:column;align-items:center;
+}
+.proof-diagram svg{width:100%;max-width:220px;height:auto;}
+.proof-caption{
+  font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.04em;
+  color:var(--teal-300);margin-top:0.4rem;text-align:center;
+}
+.proof-step h4{font-family:var(--font-display);font-size:1rem;margin:0 0 0.35rem 0;color:var(--navy-900);}
+.proof-step p{font-size:0.88rem;margin:0 0 0.5rem 0;}
+.proof-eq{
+  font-family:var(--font-mono);font-size:0.86rem;
+  background:var(--navy-950);color:var(--teal-300);
+  padding:0.3rem 0.6rem;border-radius:6px;display:inline-block;margin:0.2rem 0.3rem 0.2rem 0;
+}
+@media (max-width:720px){.proof-step{grid-template-columns:1fr;}}
+
+/* ===== Sim toolbar (play/pause/reset/direction) ===== */
+.sim-toolbar{display:flex;gap:0.6rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+.sim-toolbar button{
+  border:1px solid var(--line);background:#fff;border-radius:8px;
+  padding:0.45rem 0.85rem;font-size:0.8rem;font-weight:600;color:var(--navy-900);
+}
+.sim-toolbar button:hover{border-color:var(--teal-500);color:var(--teal-500);}
+.sim-toolbar select{
+  border:1px solid var(--line);border-radius:8px;padding:0.44rem 0.6rem;
+  font-size:0.8rem;font-family:var(--font-body);background:#fff;color:var(--navy-900);
+}
+
+/* ===== Simulation panels ===== */
+.sim-panel{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:1.4rem;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  margin:1.6rem 0;
+  position:relative;
+}
+.sim-panel.expanded{
+  position:fixed;
+  inset:2.5vh 3vw;
+  z-index:999;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 30px 90px rgba(0,0,0,0.55);
+  margin:0;
+  border-radius:16px;
+}
+.sim-panel.expanded .sim-stage{
+  flex:0 0 90%;
+  min-height:0;
+  padding:0.8rem;
+}
+.sim-panel.expanded canvas{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+}
+.sim-panel.expanded .sim-controls{
+  flex:0 0 10%;
+  min-height:84px;
+  overflow-y:auto;
+  border-top:1px solid var(--line);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:0.5rem 1.4rem;
+  padding:0.6rem 1.2rem;
+}
+.sim-panel.expanded .control-row{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  margin-bottom:0;
+  width:auto;
+  min-width:170px;
+}
+.sim-panel.expanded .control-row label{
+  display:flex;
+  gap:0.4rem;
+  align-items:baseline;
+  font-size:0.75rem;
+  margin-bottom:0;
+  white-space:nowrap;
+}
+.sim-panel.expanded .control-row input[type=range]{width:100px;}
+.sim-panel.expanded .toggle-row{margin-top:0;gap:0.35rem;}
+.sim-panel.expanded .toggle-chip{padding:0.22rem 0.55rem 0.22rem 0.4rem;font-size:0.7rem;}
+.sim-panel.expanded .readouts{
+  margin-top:0;padding-top:0;border-top:none;
+  display:flex;flex-wrap:wrap;gap:0.3rem 1rem;
+  background:none;border:none;padding:0;
+}
+.sim-panel.expanded .readouts div{flex-direction:row;gap:0.3rem;align-items:baseline;}
+.sim-panel.expanded .readouts div span{font-size:0.6rem;}
+.sim-panel.expanded .readouts div b{font-size:0.75rem;}
+.sim-panel.expanded .sim-drag-hint{display:none;}
+.sim-panel.expanded .sim-toolbar{margin-bottom:0.6rem;}
+.sim-backdrop{position:fixed;inset:0;background:rgba(7,18,35,0.82);z-index:998;display:none;}
+.sim-backdrop.active{display:block;}
+body.sim-lock{overflow:hidden;}
+.sim-fullscreen-btn{
+  position:absolute; top:0.7rem; right:0.7rem; z-index:5;
+  background:rgba(7,18,35,0.55); border:1px solid rgba(255,255,255,0.25); color:#EAF0F6;
+  border-radius:8px; padding:0.4rem 0.55rem; font-size:0.95rem; line-height:1;
+  cursor:pointer;
+}
+.sim-fullscreen-btn:hover{border-color:var(--teal-400); color:var(--teal-300);}
+.sim-drag-hint{font-size:0.72rem;color:#8AA0BE;margin-top:0.5rem;}
+.sim-stage{
+  background:linear-gradient(180deg,var(--navy-900),var(--navy-950));
+  padding:1.2rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+.sim-controls{padding:1.3rem 1.4rem;}
+.control-row{margin-bottom:1rem;}
+.control-row label{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.82rem;
+  font-weight:600;
+  margin-bottom:0.3rem;
+}
+.control-row .val{font-family:var(--font-mono);color:var(--teal-500);}
+.control-row input[type=range]{width:100%;}
+.toggle-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.9rem;}
+.toggle-chip{
+  display:flex;align-items:center;gap:0.4rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:0.32rem 0.7rem 0.32rem 0.5rem;
+  font-size:0.78rem;
+  cursor:pointer;
+  user-select:none;
+  background:var(--paper);
+}
+.toggle-chip input{margin:0;}
+.toggle-chip .swatch{width:10px;height:10px;border-radius:50%;}
+.readouts{
+  margin-top:1.1rem;
+  padding-top:1rem;
+  border-top:1px solid var(--line);
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.5rem 0.8rem;
+}
+.readouts div span{display:block;color:var(--muted);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;}
+.readouts div b{color:var(--navy-900);font-size:0.95rem;}
+
+/* ===== Quiz ===== */
+.quiz-q{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:1.1rem 1.2rem;
+  margin-bottom:1rem;
+  background:#fff;
+}
+.quiz-q .qnum{font-family:var(--font-mono);font-size:0.7rem;color:var(--teal-500);margin-bottom:0.3rem;display:block;}
+.quiz-q .options{display:flex;flex-direction:column;gap:0.45rem;margin-top:0.7rem;}
+.quiz-q .options label{
+  display:flex;gap:0.55rem;align-items:flex-start;
+  padding:0.5rem 0.6rem;border-radius:8px;border:1px solid var(--line);
+  font-size:0.9rem;cursor:pointer;
+}
+.quiz-q .options label:hover{background:var(--paper);}
+.quiz-q input[type=number]{
+  margin-top:0.6rem;padding:0.5rem 0.7rem;border:1px solid var(--line);border-radius:8px;
+  font-family:var(--font-mono);width:160px;
+}
+.quiz-q .explain{
+  display:none;margin-top:0.7rem;padding:0.7rem 0.8rem;border-radius:8px;
+  background:var(--paper-dim);font-size:0.85rem;
+}
+.quiz-q.correct{border-color:var(--teal-500);}
+.quiz-q.correct .explain{display:block;border-left:3px solid var(--teal-500);}
+.quiz-q.incorrect{border-color:var(--danger);}
+.quiz-q.incorrect .explain{display:block;border-left:3px solid var(--danger);}
+.quiz-actions{display:flex;align-items:center;gap:1rem;margin-top:1.2rem;}
+.btn{
+  background:var(--navy-900);color:#fff;border:none;border-radius:10px;
+  padding:0.75rem 1.3rem;font-weight:600;font-size:0.9rem;
+}
+.btn:hover{background:var(--navy-800);}
+.btn.gold{background:var(--gold-500);color:var(--navy-950);}
+.btn.gold:hover{background:var(--gold-600);}
+.score-pill{
+  font-family:var(--font-mono);font-size:0.85rem;
+  background:var(--paper-dim);padding:0.5rem 0.9rem;border-radius:999px;
+}
+
+/* ===== Beyond-syllabus banner ===== */
+.beyond-banner{
+  background:repeating-linear-gradient(135deg, rgba(201,162,39,0.10), rgba(201,162,39,0.10) 10px, rgba(201,162,39,0.04) 10px, rgba(201,162,39,0.04) 20px);
+  border:1.5px dashed var(--gold-500);
+  border-radius:12px;
+  padding:0.9rem 1.2rem;
+  margin-bottom:1.6rem;
+  font-size:0.86rem;
+  display:flex;
+  gap:0.7rem;
+  align-items:flex-start;
+}
+.beyond-banner .icon{font-size:1.1rem;line-height:1;}
+.beyond-banner b{display:block;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-600);margin-bottom:0.15rem;}
+
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.gallery-card{
+  border:1px solid var(--line);border-radius:14px;padding:1.2rem;background:#fff;
+}
+.gallery-card .tag{
+  font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gold-600);background:#FBF6E6;padding:0.2rem 0.5rem;border-radius:999px;display:inline-block;margin-bottom:0.5rem;
+}
+
+.pagenav{display:flex;justify-content:space-between;margin-top:2.4rem;padding-top:1.4rem;border-top:1px solid var(--line);}
+.pagenav button{background:none;border:1px solid var(--line);border-radius:10px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;color:var(--navy-900);}
+.pagenav button:hover{border-color:var(--teal-500);color:var(--teal-500);}
+
+.summary-box{
+  border:1px solid var(--line);border-radius:14px;padding:1.4rem;background:#fff;margin-top:1.6rem;
+}
+@media print{
+  .railnav,.pagenav,.toggle-row,.quiz-actions button{display:none;}
+}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;}
+  .railnav{position:relative;height:auto;flex-direction:row;overflow-x:auto;align-items:center;}
+  .brand{display:none;}
+  .navlist{flex-direction:row;}
+  .progress-track{display:none;}
+  .hero-inner{grid-template-columns:1fr;}
+  .sim-panel{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:1fr;}
+  .page-inner{padding:2rem 1.2rem 3.5rem;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+:focus-visible{outline:3px solid var(--teal-400);outline-offset:2px;}
+/* ===== Gemini-style simulation widgets (orbit + conical pendulum) ===== */
+.gsim-widget{
+  --bg-color:#0f172a;
+  --panel-bg:#1e293b;
+  --accent:#38bdf8;
+  --text:#f8fafc;
+  --text-muted:#94a3b8;
+  --border:#334155;
+  --success:#4ade80;
+  --danger:#f87171;
+  --warning:#f59e0b;
+  --purple:#c084fc;
+  background:var(--bg-color);
+  color:var(--text);
+  border-radius:14px;
+  padding:16px;
+  margin:1rem 0;
+}
+.gsim-widget *{box-sizing:border-box;}
+.gsim-widget .main-container{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+  width:100%;
+}
+@media (max-width:1024px){
+  .gsim-widget .main-container{ grid-template-columns:1fr; }
+}
+.gsim-widget .canvas-card{
+  background:var(--panel-bg);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.gsim-widget canvas{
+  background:#090d16;
+  border-radius:8px;
+  width:100%;
+  max-width:700px;
+  height:auto;
+  aspect-ratio:1/1;
+  cursor:default;
+}
+.gsim-widget .controls-card{
+  background:var(--panel-bg);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.gsim-widget .section-title{
+  font-family:var(--font-body);
+  font-size:1.05rem;
+  font-weight:600;
+  color:var(--accent);
+  border-bottom:1px solid var(--border);
+  padding-bottom:6px;
+  margin-bottom:4px;
+}
+.gsim-widget .control-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.gsim-widget .control-group label{
+  font-size:0.85rem;
+  display:flex;
+  justify-content:space-between;
+  color:var(--text-muted);
+}
+.gsim-widget .control-group label span{
+  color:var(--text);
+  font-weight:600;
+}
+.gsim-widget input[type="range"], .gsim-widget select{
+  width:100%;
+  accent-color:var(--accent);
+}
+.gsim-widget select{
+  background:#090d16;
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:8px;
+  border-radius:6px;
+  outline:none;
+}
+.gsim-widget .checkbox-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.gsim-widget .checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.85rem;
+  cursor:pointer;
+  color:var(--text);
+}
+.gsim-widget .checkbox-label input{
+  accent-color:var(--accent);
+}
+.gsim-widget .btn-group{
+  display:flex;
+  gap:10px;
+}
+.gsim-widget button{
+  flex:1;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  background:var(--accent);
+  color:#0f172a;
+  font-weight:600;
+  cursor:pointer;
+  transition:opacity 0.2s;
+  font-family:var(--font-body);
+}
+.gsim-widget button:hover{ opacity:0.9; }
+.gsim-widget button.secondary{
+  background:#475569;
+  color:var(--text);
+}
+.gsim-widget .readout-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  background:#090d16;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+}
+.gsim-widget .readout-item{
+  display:flex;
+  flex-direction:column;
+}
+.gsim-widget .readout-item .title{
+  font-size:0.75rem;
+  color:var(--text-muted);
+}
+.gsim-widget .readout-item .value{
+  font-size:0.95rem;
+  font-weight:bold;
+  color:var(--accent);
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="railnav" aria-label="Module navigation">
+    <div class="brand">Circular Motion<small>CIE 9702 &middot; DPS International Ghana</small><span class="prepared-by">&mdash; Prepared by Sir Daniel</span></div>
+
+    <div>
+      <div class="nav-group-label">Core syllabus</div>
+      <ul class="navlist" id="nav-core">
+        <li><button data-page="p1"><span class="dot"></span>1. Foundations</button></li>
+        <li><button data-page="p2"><span class="dot"></span>2. Centripetal acceleration</button></li>
+        <li><button data-page="p3"><span class="dot"></span>3. Conical pendulum</button></li>
+        <li><button data-page="passess"><span class="dot"></span>Assessment</button></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="nav-group-label beyond">Beyond the syllabus</div>
+      <ul class="navlist beyond" id="nav-beyond">
+        <li><button data-page="e1"><span class="dot"></span>Vertical circular motion</button></li>
+        <li><button data-page="e2"><span class="dot"></span>Applications gallery</button></li>
+      </ul>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-label">Core assessment score</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-text">Not attempted yet</div>
+    </div>
+  </nav>
+
+  <main id="main"></main>
+</div>
+<div class="sim-backdrop" id="simBackdrop"></div>
+
+<script>
+/* ============================================================
+   Circular Motion — CIE 9702 Interactive Module
+   Core physics, canvas rendering, quiz engine, page content.
+   ============================================================ */
+
+const G = 9.81;
+
+/* ---------- small utilities ---------- */
+function el(html){
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+function fmt(n, dp=2){
+  if (!isFinite(n)) return '—';
+  return Number(n).toFixed(dp);
+}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+
+/* ---------- fullscreen toggle for simulation panels ---------- */
+let __expandedPanel = null;
+function toggleSimFullscreen(panelId, canvasId, baseW, baseH){
+  const panel = document.getElementById(panelId);
+  const cv = document.getElementById(canvasId);
+  const backdrop = document.getElementById('simBackdrop');
+  const btn = panel.querySelector('.sim-fullscreen-btn');
+  const isExpanding = !panel.classList.contains('expanded');
+  if (__expandedPanel && __expandedPanel !== panel){
+    collapseSimPanel(__expandedPanel);
+  }
+  if (isExpanding){
+    panel.classList.add('expanded');
+    backdrop.classList.add('active');
+    document.body.classList.add('sim-lock');
+    const aspect = baseW/baseH;
+    const availW = window.innerWidth*0.94*0.94;
+    const availH = window.innerHeight*0.95*0.90 - 20;
+    let w = availW, h = w/aspect;
+    if (h > availH){ h = availH; w = h*aspect; }
+    cv.width = Math.round(Math.max(w, baseW)*1.4);
+    cv.height = Math.round(Math.max(h, baseH)*1.4);
+    if (btn) btn.textContent = '⤡ Exit fullscreen';
+    __expandedPanel = panel;
+  } else {
+    collapseSimPanel(panel);
+  }
+}
+function collapseSimPanel(panel){
+  if (!panel) return;
+  const cv = panel.querySelector('canvas');
+  const btn = panel.querySelector('.sim-fullscreen-btn');
+  const baseW = parseInt(panel.dataset.baseW), baseH = parseInt(panel.dataset.baseH);
+  panel.classList.remove('expanded');
+  document.getElementById('simBackdrop').classList.remove('active');
+  document.body.classList.remove('sim-lock');
+  if (cv && baseW && baseH){ cv.width = baseW; cv.height = baseH; }
+  if (btn) btn.textContent = '⛶ Fullscreen';
+  if (__expandedPanel === panel) __expandedPanel = null;
+}
+document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && __expandedPanel) collapseSimPanel(__expandedPanel); });
+
+function drawArrow(ctx, x1, y1, x2, y2, color, width=3, headLen=10){
+  const dx = x2-x1, dy = y2-y1;
+  const len = Math.hypot(dx,dy);
+  if (len < 1) return;
+  const ang = Math.atan2(dy,dx);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2 - headLen*Math.cos(ang-Math.PI/6), y2 - headLen*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2 - headLen*Math.cos(ang+Math.PI/6), y2 - headLen*Math.sin(ang+Math.PI/6));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function labelAt(ctx, text, x, y, color){
+  ctx.font = "600 11px 'IBM Plex Mono', monospace";
+  const padding = 4, h = 15;
+  const w = ctx.measureText(text).width + padding*2;
+  ctx.fillStyle = 'rgba(7,18,35,0.88)';
+  ctx.fillRect(x-padding, y-h+3, w, h);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x-padding, y-h+3, w, h);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, x, y);
+}
+
+/* label with a small readability backdrop, for busy simulation canvases */
+function labelBg(ctx, text, x, y, color){
+  ctx.font = "600 11px 'IBM Plex Mono', monospace";
+  const padding = 4, h = 15;
+  const w = ctx.measureText(text).width + padding*2;
+  ctx.fillStyle = 'rgba(7,18,35,0.82)';
+  ctx.fillRect(x-padding, y-h+3, w, h);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x-padding, y-h+3, w, h);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(text, x, y);
+}
+
+/* isometric-ish 3D projection: x right, y up, z toward viewer */
+function project3D(x,y,z, ox, oy, scale){
+  const cos30 = Math.cos(Math.PI/6), sin30 = Math.sin(Math.PI/6);
+  const sx = ox + (x - z) * cos30 * scale;
+  const sy = oy - y*scale + (x + z) * sin30 * scale * 0.5;
+  return {x:sx, y:sy};
+}
+
+/* ---------- quiz engine ---------- */
+/* question: {type:'mcq', q, options, answer, explain} or {type:'numeric', q, answer, tol, unit, explain} */
+function buildQuiz(containerId, questions, opts={}){
+  const container = document.getElementById(containerId);
+  const graded = !!opts.graded;
+  let html = '';
+  questions.forEach((qq,i)=>{
+    html += `<div class="quiz-q" data-idx="${i}" data-type="${qq.type}">
+      <span class="qnum">Question ${i+1}</span>
+      <div class="qtext">${qq.q}</div>`;
+    if (qq.type === 'mcq'){
+      html += `<div class="options">` + qq.options.map((o,oi)=>`
+        <label><input type="radio" name="q${containerId}_${i}" value="${oi}"><span>${o}</span></label>
+      `).join('') + `</div>`;
+    } else {
+      html += `<div><input type="number" step="any" name="q${containerId}_${i}" placeholder="Your answer${qq.unit? ' ('+qq.unit+')':''}"></div>`;
+    }
+    html += `<div class="explain"></div></div>`;
+  });
+  html += `<div class="quiz-actions">
+      <button class="btn gold" id="${containerId}_check">Check answers</button>
+      <span class="score-pill" id="${containerId}_score">Not yet marked</span>
+    </div>`;
+  container.innerHTML = html;
+
+  document.getElementById(containerId+'_check').addEventListener('click', ()=>{
+    let correct = 0;
+    questions.forEach((qq,i)=>{
+      const qEl = container.querySelector(`.quiz-q[data-idx="${i}"]`);
+      const explainEl = qEl.querySelector('.explain');
+      let isCorrect = false;
+      if (qq.type === 'mcq'){
+        const sel = qEl.querySelector(`input[name="q${containerId}_${i}"]:checked`);
+        isCorrect = sel && Number(sel.value) === qq.answer;
+      } else {
+        const inp = qEl.querySelector(`input[name="q${containerId}_${i}"]`);
+        const val = parseFloat(inp.value);
+        isCorrect = !isNaN(val) && Math.abs(val - qq.answer) <= qq.tol;
+      }
+      qEl.classList.remove('correct','incorrect');
+      qEl.classList.add(isCorrect ? 'correct':'incorrect');
+      explainEl.innerHTML = (isCorrect ? '<b>Correct.</b> ' : '<b>Not quite.</b> ') + qq.explain;
+      if (isCorrect) correct++;
+    });
+    document.getElementById(containerId+'_score').textContent = `${correct} / ${questions.length} correct`;
+    if (graded){
+      const pct = Math.round(100*correct/questions.length);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = `${correct} / ${questions.length} (${pct}%) on core assessment`;
+      window.__coreScore = {correct, total: questions.length};
+      renderSummary();
+    }
+  });
+}
+
+/* ============================================================
+   QUIZ DATA
+   ============================================================ */
+const QUIZ_P1 = [
+  {type:'mcq', q:'90&deg; expressed in radians is:', options:['&pi;/4','&pi;/2','&pi;','2&pi;'], answer:1,
+    explain:'&theta;(rad) = &theta;(&deg;) &times; &pi;/180 = 90 &times; &pi;/180 = &pi;/2.'},
+  {type:'numeric', q:'A wheel completes 5 revolutions in 2.0 s. Calculate its angular velocity in rad s&#8315;&sup1; (3 s.f.).', answer:15.7, tol:0.3, unit:'rad/s',
+    explain:'&omega; = &theta;/t = (5 &times; 2&pi;)/2.0 = 15.7 rad s&#8315;&sup1;.'},
+  {type:'numeric', q:'An object moves in a circle of radius 0.50 m with speed 4.0 m s&#8315;&sup1;. Find its angular velocity in rad s&#8315;&sup1;.', answer:8.0, tol:0.2, unit:'rad/s',
+    explain:'&omega; = v/r = 4.0/0.50 = 8.0 rad s&#8315;&sup1;.'},
+  {type:'numeric', q:'Calculate the period, in s, of a rotation with frequency 50 Hz.', answer:0.02, tol:0.002, unit:'s',
+    explain:'T = 1/f = 1/50 = 0.020 s.'},
+  {type:'numeric', q:'A point has &omega; = 10 rad s&#8315;&sup1; at radius 0.20 m. Find its linear speed in m s&#8315;&sup1;.', answer:2.0, tol:0.1, unit:'m/s',
+    explain:'v = &omega;r = 10 &times; 0.20 = 2.0 m s&#8315;&sup1;.'},
+  {type:'mcq', q:'Which unit correctly measures angular velocity?', options:['m s&#8315;&sup1;','rad s&#8315;&sup1;','rad s&#8315;&sup2;','Hz'], answer:1,
+    explain:'Angular velocity is the rate of change of angular displacement, measured in rad s&#8315;&sup1;.'},
+  {type:'mcq', q:'If the radius of a circular path doubles while &omega; stays constant, the linear speed:', options:['Halves','Stays the same','Doubles','Quadruples'], answer:2,
+    explain:'v = &omega;r, so v is directly proportional to r at constant &omega;.'},
+  {type:'numeric', q:'A CD rotates at 500 revolutions per minute. Calculate &omega; in rad s&#8315;&sup1; (3 s.f.).', answer:52.4, tol:1.0, unit:'rad/s',
+    explain:'&omega; = (500 &times; 2&pi;)/60 = 52.4 rad s&#8315;&sup1;.'},
+  {type:'mcq', q:'The relationship between period T and frequency f is:', options:['T = f','T = 1/f','T = 2&pi;f','T = f/2&pi;'], answer:1,
+    explain:'Period and frequency are reciprocals: T = 1/f.'},
+  {type:'mcq', q:'Two points lie on the same rotating rigid disc: one at radius r, one at radius 2r. Compared with the point at r, the point at 2r has:', options:['The same &omega; and the same v','The same &omega; but twice the v','Twice the &omega; and the same v','Twice the &omega; and twice the v'], answer:1,
+    explain:'All points on a rigid rotating disc share the same &omega;; v = &omega;r, so linear speed scales with radius.'}
+];
+
+const QUIZ_CORE = [
+  {type:'mcq', q:'The SI unit of angular displacement is:', options:['Degree','Radian','Steradian','Hertz'], answer:1,
+    explain:'Angular displacement is measured in radians in the SI system, defined by arc length / radius.'},
+  {type:'numeric', q:'A car of mass 900 kg travels at constant speed 12 m s&#8315;&sup1; around a circular bend of radius 40 m. Calculate the centripetal force in N (3 s.f.).', answer:3240, tol:60, unit:'N',
+    explain:'F = mv&sup2;/r = 900 &times; 12&sup2; / 40 = 3240 N.'},
+  {type:'mcq', q:'In the derivation of a = v&sup2;/r, the direction of the instantaneous acceleration is:', options:['Tangential to the circle','Directed away from the centre','Directed towards the centre','Zero, since speed is constant'], answer:2,
+    explain:'The change in velocity &Delta;v points towards the centre of the circle as &Delta;&theta; &rarr; 0, so the acceleration is centripetal (centre-seeking).'},
+  {type:'numeric', q:'A particle moves in a circle of radius 0.80 m at constant speed 6.0 m s&#8315;&sup1;. Calculate the centripetal acceleration in m s&#8315;&sup2; (3 s.f.).', answer:45.0, tol:1.0, unit:'m/s&sup2;',
+    explain:'a = v&sup2;/r = 6.0&sup2;/0.80 = 45.0 m s&#8315;&sup2;.'},
+  {type:'mcq', q:'In a conical pendulum, the vertical component of the string tension:', options:['Provides the centripetal force','Balances the weight of the bob','Is zero','Equals the net force on the bob'], answer:1,
+    explain:'T cos&theta; balances mg (no vertical acceleration); T sin&theta; provides the centripetal force.'},
+  {type:'numeric', q:'A conical pendulum has string length 1.2 m; the string makes 30&deg; with the vertical. Calculate the period of revolution in s (3 s.f.). Take g = 9.81 m s&#8315;&sup2;.', answer:2.05, tol:0.06, unit:'s',
+    explain:'T = 2&pi;&radic;(L cos&theta;/g) = 2&pi;&radic;(1.2 &times; cos30&deg;/9.81) = 2.05 s.'},
+  {type:'mcq', q:'By the definition of the radian, an angle of 1 radian is subtended at the centre of a circle when the arc length is:', options:['Equal to the diameter','Equal to the radius','Equal to half the radius','Equal to the circumference'], answer:1,
+    explain:'One radian is defined as the angle subtended when the arc length s equals the radius r, i.e. &theta; = s/r = 1 when s = r.'},
+  {type:'numeric', q:'A conical pendulum has string length 0.80 m; the string makes 25&deg; with the vertical. Calculate the radius of the circular path in m (3 s.f.).', answer:0.338, tol:0.01, unit:'m',
+    explain:'r = L sin&theta; = 0.80 &times; sin25&deg; = 0.338 m.'},
+  {type:'mcq', q:'For an object undergoing uniform circular motion, which statement is correct?', options:['Both speed and velocity are constant','Speed is constant but velocity continuously changes direction','Velocity is constant but speed changes','Both speed and velocity continuously increase'], answer:1,
+    explain:'Velocity is a vector; its direction continually changes even though its magnitude (speed) is constant — hence a non-zero centripetal acceleration.'},
+  {type:'numeric', q:'A ball of mass 0.20 kg on a string moves in a horizontal circle of radius 0.50 m with &omega; = 6.0 rad s&#8315;&sup1; (treat the string as horizontal). Calculate the tension in N (3 s.f.).', answer:3.60, tol:0.1, unit:'N',
+    explain:'F = m&omega;&sup2;r = 0.20 &times; 6.0&sup2; &times; 0.50 = 3.60 N.'},
+  {type:'mcq', q:'Which expression correctly gives centripetal force in terms of angular velocity?', options:['F = mv/r','F = m&omega;&sup2;r','F = m&omega;r&sup2;','F = mv&sup2;r'], answer:1,
+    explain:'Substituting v = &omega;r into F = mv&sup2;/r gives F = m&omega;&sup2;r.'},
+  {type:'numeric', q:'A conical pendulum bob of mass 0.30 kg moves in a horizontal circle of radius 0.25 m with the string at 40&deg; to the vertical. Calculate the tension in N (3 s.f.). g = 9.81 m s&#8315;&sup2;.', answer:3.84, tol:0.1, unit:'N',
+    explain:'T cos&theta; = mg &rarr; T = mg/cos&theta; = (0.30 &times; 9.81)/cos40&deg; = 3.84 N.'}
+];
+
+/* ============================================================
+   PAGE CONTENT (HTML strings)
+   ============================================================ */
+
+/* ---- Gemini-code simulation markup (orbit sim + conical pendulum) ---- */
+function geminiOrbitHTML(prefix){
+  return `
+    <div class="gsim-widget">
+      <div class="main-container">
+        <div class="canvas-card">
+          <canvas id="${prefix}_canvas" width="700" height="700"></canvas>
+        </div>
+        <div class="controls-card">
+          <div class="section-title">Control Panel</div>
+          <div class="btn-group">
+            <button id="${prefix}_pauseBtn">Pause</button>
+            <button id="${prefix}_resetBtn" class="secondary">Reset (t = 0)</button>
+          </div>
+
+          <div class="control-group">
+            <label>Direction of Motion</label>
+            <select id="${prefix}_directionSelect">
+              <option value="1">Anti-Clockwise</option>
+              <option value="-1">Clockwise</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Angle Display Unit</label>
+            <select id="${prefix}_angleUnitSelect">
+              <option value="pirad" selected>Pi Radians (π rad)</option>
+              <option value="deg">Degrees (°)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Orbit Radius (<i>r</i>): <span id="${prefix}_rVal">2.0 m</span></label>
+            <input type="range" id="${prefix}_radiusInput" min="0.8" max="3.5" step="0.1" value="2.0">
+          </div>
+
+          <div class="control-group">
+            <label>Angular Speed (|ω|): <span id="${prefix}_wVal">1.5 rad/s</span></label>
+            <input type="range" id="${prefix}_omegaInput" min="0.0" max="5.0" step="0.1" value="1.5">
+          </div>
+
+          <div class="section-title">Visual Overlays</div>
+          <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showForce" checked> Centripetal Force Vector (<i>F<sub>c</sub></i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showVel" checked> Tangential Velocity Vector (<i>v</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showRadius" checked> Radius Vector (<i>r</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showArc" checked> Arc Length / Distance (<i>s</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showChord" checked> Linear Displacement Vector (Δ<i>r</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showAngle" checked> Angular Displacement (Δθ)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showTime" checked> Show Elapsed Time (Δ<i>t</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showGrid" checked> Coordinate Axes</label>
+          </div>
+
+          <div class="section-title">Live Calculations</div>
+          <div class="readout-grid">
+            <div class="readout-item">
+              <span class="title">Elapsed Time (Δt)</span>
+              <span class="value" id="${prefix}_timeOut">0.00 s</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Linear Speed (v)</span>
+              <span class="value" id="${prefix}_vOut">3.00 m/s</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Angular Disp. (Δθ)</span>
+              <span class="value" id="${prefix}_thetaOut">0.00 π rad</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Arc Length / Distance (s)</span>
+              <span class="value" id="${prefix}_arcOut">0.00 m</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Linear Disp. (|Δr|)</span>
+              <span class="value" id="${prefix}_dispOut">0.00 m</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Angular Speed (ω)</span>
+              <span class="value" id="${prefix}_omegaOut">1.50 rad/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function geminiConicalHTML(prefix){
+  return `
+    <div class="gsim-widget">
+      <div class="main-container">
+        <div class="canvas-card">
+          <canvas id="${prefix}_canvas" width="700" height="700"></canvas>
+        </div>
+        <div class="controls-card">
+          <div class="section-title">Conical Pendulum Controls</div>
+          <div class="btn-group">
+            <button id="${prefix}_pauseBtn">Pause</button>
+            <button id="${prefix}_resetBtn" class="secondary">Reset</button>
+          </div>
+
+          <div class="control-group">
+            <label>String Length (<i>L</i>): <span id="${prefix}_lVal">2.5 m</span></label>
+            <input type="range" id="${prefix}_lengthInput" min="1.0" max="4.0" step="0.1" value="2.5">
+          </div>
+
+          <div class="control-group">
+            <label>Cone Angle (<i>θ</i>): <span id="${prefix}_thetaAngleVal">30°</span></label>
+            <input type="range" id="${prefix}_thetaInput" min="5" max="75" step="1" value="30">
+          </div>
+
+          <div class="control-group">
+            <label>Bob Mass (<i>m</i>): <span id="${prefix}_mVal">1.0 kg</span></label>
+            <input type="range" id="${prefix}_massInput" min="0.2" max="5.0" step="0.1" value="1.0">
+          </div>
+
+          <div class="section-title">Force &amp; Vector Overlays</div>
+          <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showTension" checked> Tension Vector (<i>T</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showWeight" checked> Weight Vector (<i>W = mg</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showFc" checked> Centripetal Force Vector (<i>F<sub>c</sub></i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showComponents" checked> Resolved Tension Components (<i>T_x, T_y</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showConicalVel" checked> Tangential Velocity Vector (<i>v</i>)</label>
+            <label class="checkbox-label"><input type="checkbox" id="${prefix}_showConeGeometry" checked> Cone Outline &amp; Vertical Axis</label>
+          </div>
+
+          <div class="section-title">Equilibrium Calculations</div>
+          <div class="readout-grid">
+            <div class="readout-item">
+              <span class="title">Orbit Radius (r = L sin θ)</span>
+              <span class="value" id="${prefix}_cRadiusOut">1.25 m</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Height (h = L cos θ)</span>
+              <span class="value" id="${prefix}_cHeightOut">2.17 m</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Tension (T = mg / cos θ)</span>
+              <span class="value" id="${prefix}_cTensionOut">11.33 N</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Centripetal Force (F_c)</span>
+              <span class="value" id="${prefix}_cFcOut">5.66 N</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Angular Speed (ω)</span>
+              <span class="value" id="${prefix}_cOmegaOut">2.13 rad/s</span>
+            </div>
+            <div class="readout-item">
+              <span class="title">Orbital Period (T_p)</span>
+              <span class="value" id="${prefix}_cPeriodOut">2.95 s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+const PAGE_1 = `
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">CIE 9702 &middot; Topic 12.1</div>
+      <h1>Foundations: Angular Quantities</h1>
+      <p class="lede">Every rotating system &mdash; from a bicycle wheel to a satellite dish &mdash; is described by the same handful of angular quantities. Get comfortable with radians, &omega;, T and f here before we build up to forces.</p>
+      <div class="hero-signature"><span class="rule"></span><span class="credit">Prepared by <b>Sir Daniel</b></span></div>
+    </div>
+    <div class="hero-canvas-wrap">
+      <canvas id="heroCanvas" width="360" height="300"></canvas>
+    </div>
+  </div>
+</section>
+
+<div class="page-inner">
+  <div class="card">
+    <span class="section-num">12.1</span>
+    <h2>Definitions</h2>
+    <p>Angular displacement &theta; is measured in <b>radians</b>: one radian is the angle subtended at the centre of a circle by an arc equal in length to the radius. Every quantity below has a direct linear-motion counterpart.</p>
+    <div class="def-list">
+      <div class="def-item"><span class="def-term">Angular displacement <span class="sym">(&theta;)</span></span><span class="def-body">The angle swept out by the radius line joining the object to the centre of the circle. &theta; = s / r, where s is the arc length travelled &mdash; measured in radians (rad).</span></div>
+      <div class="def-item"><span class="def-term">Angular velocity <span class="sym">(&omega;)</span></span><span class="def-body">The rate of change of angular displacement. &omega; = &theta;/t = 2&pi;/T = 2&pi;f &mdash; measured in radians per second (rad s&#8315;&sup1;).</span></div>
+      <div class="def-item"><span class="def-term">Period <span class="sym">(T)</span></span><span class="def-body">The time taken to complete one full revolution &mdash; measured in seconds (s).</span></div>
+      <div class="def-item"><span class="def-term">Frequency <span class="sym">(f)</span></span><span class="def-body">The number of complete revolutions per second. f = 1/T &mdash; measured in hertz (Hz).</span></div>
+      <div class="def-item"><span class="def-term">Linear (tangential) speed <span class="sym">(v)</span></span><span class="def-body">The speed of the object along its circular path at any instant. v = &omega;r &mdash; measured in metres per second (m s&#8315;&sup1;).</span></div>
+    </div>
+    <div class="formula-box">
+      <span data-katex="\\omega = \\dfrac{v}{r} = \\dfrac{2\\pi}{T} = 2\\pi f"></span>
+    </div>
+    <p><i>CIE formula sheet reference:</i> both &omega; = v/r and v = &omega;r appear directly on the Cambridge 9702 data &amp; formulae sheet.</p>
+  </div>
+
+  <div class="card">
+    <span class="section-num">Full simulation</span>
+    <h2>Angular quantities &mdash; interactive simulation</h2>
+    <p>This is the same simulation you'll meet again on the Centripetal Acceleration page &mdash; explore every quantity here first. Drag the gold marker to set the angle directly, or use &#9974; to work at full screen.</p>
+    ${geminiOrbitHTML('gorb1')}
+  </div>
+
+  <div class="card">
+    <h2>Proof: angular displacement, &theta; = s / r</h2>
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="120" r="85" fill="none" stroke="#1B3B63" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="120" cy="120" r="4" fill="#EAF0F6"/>
+          <text x="112" y="140" fill="#8AA0BE" font-size="12">O</text>
+          <line x1="120" y1="120" x2="205" y2="120" stroke="#5EEAD4" stroke-width="2"/>
+          <text x="160" y="112" fill="#5EEAD4" font-size="12">r</text>
+          <line x1="120" y1="120" x2="160" y2="47" stroke="#5EEAD4" stroke-width="2"/>
+          <text x="150" y="80" fill="#5EEAD4" font-size="12">r</text>
+          <path d="M 205,120 A 85,85 0 0,0 160,47" fill="none" stroke="#E8CD6B" stroke-width="4"/>
+          <text x="185" y="75" fill="#E8CD6B" font-size="12" font-weight="bold">s</text>
+          <path d="M 155,120 A 35,35 0 0,0 148,98" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="140" y="108" fill="#E8CD6B" font-size="12">&theta;</text>
+          <circle cx="205" cy="120" r="4" fill="#EAF0F6"/>
+          <circle cx="160" cy="47" r="4" fill="#EAF0F6"/>
+        </svg>
+        <div class="proof-caption">Arc length s subtending &theta; at radius r</div>
+      </div>
+      <div class="step-details">
+        <h4>Definition from the radian</h4>
+        <p>The radian is defined so that when the arc length s exactly equals the radius r, the angle subtended is exactly 1 radian. Scaling proportionally, an arc of length s subtends an angle:</p>
+        <span class="proof-eq">&theta; = s / r</span>
+        <p style="margin-top:0.6rem;">Rearranged, s = r&theta;. This is why one full revolution (arc length = circumference = 2&pi;r) corresponds to &theta; = 2&pi;r / r = 2&pi; radians.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Proof: angular velocity, &omega; = &theta;/t = 2&pi;/T = 2&pi;f</h2>
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="120" r="85" fill="none" stroke="#1B3B63" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="120" cy="120" r="4" fill="#EAF0F6"/>
+          <line x1="120" y1="120" x2="205" y2="120" stroke="#5EEAD4" stroke-width="2"/>
+          <circle cx="205" cy="120" r="5" fill="#E8CD6B"/>
+          <text x="210" y="112" fill="#E8CD6B" font-size="12" font-weight="bold">t = 0</text>
+          <line x1="120" y1="120" x2="160" y2="47" stroke="#5EEAD4" stroke-width="2"/>
+          <circle cx="160" cy="47" r="5" fill="#E8CD6B"/>
+          <text x="163" y="40" fill="#E8CD6B" font-size="12" font-weight="bold">t = t</text>
+          <path d="M 155,120 A 35,35 0 0,0 148,98" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="138" y="108" fill="#E8CD6B" font-size="12">&theta;</text>
+        </svg>
+        <div class="proof-caption">Radius line sweeping &theta; in time t</div>
+      </div>
+      <div class="step-details">
+        <h4>Rate of change of angle</h4>
+        <p>Angular velocity is defined as the rate of change of angular displacement. For motion at constant &omega;:</p>
+        <span class="proof-eq">&omega; = &theta; / t</span>
+        <p style="margin-top:0.6rem;">One complete revolution sweeps &theta; = 2&pi; rad in one period T, so &omega; = 2&pi;/T. Since frequency f = 1/T, substituting gives the third form:</p>
+        <div class="formula-box"><span data-katex="\\omega = \\dfrac{\\theta}{t} = \\dfrac{2\\pi}{T} = 2\\pi f"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Proof: linear speed, v = &omega;r</h2>
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="120" r="85" fill="none" stroke="#1B3B63" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="120" cy="120" r="4" fill="#EAF0F6"/>
+          <line x1="120" y1="120" x2="205" y2="120" stroke="#5EEAD4" stroke-width="2"/>
+          <text x="160" y="112" fill="#5EEAD4" font-size="12">r</text>
+          <line x1="120" y1="120" x2="160" y2="47" stroke="#5EEAD4" stroke-width="2"/>
+          <path d="M 205,120 A 85,85 0 0,0 160,47" fill="none" stroke="#E8CD6B" stroke-width="4"/>
+          <text x="185" y="75" fill="#E8CD6B" font-size="12" font-weight="bold">s</text>
+          <path d="M 155,120 A 35,35 0 0,0 148,98" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="140" y="108" fill="#E8CD6B" font-size="12">&theta;</text>
+          <circle cx="205" cy="120" r="4" fill="#EAF0F6"/>
+          <circle cx="160" cy="47" r="6" fill="#4ADE80"/>
+          <line x1="160" y1="47" x2="125" y2="28" stroke="#4ADE80" stroke-width="3"/>
+          <polygon points="125,28 133,37 137,26" fill="#4ADE80"/>
+          <text x="90" y="22" fill="#4ADE80" font-size="12" font-weight="bold">v</text>
+        </svg>
+        <div class="proof-caption">Arc s swept in time t; v is tangent to the path</div>
+      </div>
+      <div class="step-details">
+        <h4>Speed = distance &divide; time (no calculus needed)</h4>
+        <p>In a time t, the object sweeps through angle &theta; while travelling a distance s round the arc of the circle. From the radian definition proved above, these are related by:</p>
+        <span class="proof-eq">s = r&theta;</span>
+        <p style="margin-top:0.6rem;">Speed is simply distance travelled divided by time taken. Applying this to the arc length s travelled in time t gives the object's linear (tangential) speed v:</p>
+        <span class="proof-eq">v = s / t</span>
+        <p style="margin-top:0.6rem;">Substituting s = r&theta; from above:</p>
+        <span class="proof-eq">v = r&theta; / t = r &times; (&theta;/t)</span>
+        <p style="margin-top:0.6rem;">But &theta;/t is exactly the angular velocity &omega;, from the previous proof. Substituting gives:</p>
+        <div class="formula-box"><span data-katex="v = \\omega r"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagenav">
+    <span></span>
+    <button data-goto="p2">Next: Centripetal acceleration &rarr;</button>
+  </div>
+</div>
+`;
+
+const PAGE_2 = `
+<div class="page-inner" style="padding-top:2.6rem;">
+  <div class="eyebrow">CIE 9702 &middot; Topic 12.2</div>
+  <h1>Centripetal Acceleration: Derivation &amp; Simulation</h1>
+  <p>An object moving in a circle at constant <i>speed</i> is still accelerating, because its <i>velocity</i> &mdash; a vector &mdash; is constantly changing direction. This section derives the size of that acceleration, then lets you explore it live.</p>
+
+  <div class="card">
+    <h2>The vector-diagram derivation, step by step</h2>
+    <p>The full geometric proof used in Cambridge exams moves from the physical circle, to a spatial triangle, to a velocity triangle, and finally to the limit as &Delta;t &rarr; 0.</p>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="110" r="85" fill="none" stroke="#1B3B63" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="120" cy="110" r="4" fill="#EAF0F6"/>
+          <text x="112" y="132" fill="#8AA0BE" font-size="12">O</text>
+          <line x1="120" y1="110" x2="60" y2="50" stroke="#5EEAD4" stroke-width="2"/>
+          <line x1="120" y1="110" x2="180" y2="50" stroke="#5EEAD4" stroke-width="2"/>
+          <circle cx="60" cy="50" r="5" fill="#E8CD6B"/>
+          <circle cx="180" cy="50" r="5" fill="#E8CD6B"/>
+          <text x="45" y="45" fill="#E8CD6B" font-weight="bold" font-size="12">A</text>
+          <text x="188" y="45" fill="#E8CD6B" font-weight="bold" font-size="12">B</text>
+          <text x="80" y="90" fill="#5EEAD4" font-size="12">r</text>
+          <text x="150" y="90" fill="#5EEAD4" font-size="12">r</text>
+          <line x1="60" y1="50" x2="25" y2="85" stroke="#E8CD6B" stroke-width="2.5"/>
+          <polygon points="25,85 30,75 35,83" fill="#E8CD6B"/>
+          <text x="6" y="80" fill="#E8CD6B" font-size="12" font-weight="bold">v&#8321;</text>
+          <line x1="180" y1="50" x2="215" y2="85" stroke="#E8CD6B" stroke-width="2.5"/>
+          <polygon points="215,85 205,83 210,75" fill="#E8CD6B"/>
+          <text x="218" y="80" fill="#E8CD6B" font-size="12" font-weight="bold">v&#8322;</text>
+        </svg>
+        <div class="proof-caption">1 &middot; Points A &amp; B on the path</div>
+      </div>
+      <div>
+        <h4>Step 1 &mdash; Define the two positions</h4>
+        <p>An object moves at constant speed v around a circle of radius r. At A its velocity is <b>v</b>&#8321;; a short time &Delta;t later at B its velocity is <b>v</b>&#8322;. Both have magnitude v, but different directions.</p>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <line x1="120" y1="180" x2="50" y2="70" stroke="#5EEAD4" stroke-width="2.5"/>
+          <line x1="120" y1="180" x2="190" y2="70" stroke="#5EEAD4" stroke-width="2.5"/>
+          <circle cx="120" cy="180" r="4" fill="#EAF0F6"/>
+          <text x="113" y="200" fill="#8AA0BE" font-size="12">O</text>
+          <path d="M 50,70 A 120,120 0 0,1 190,70" fill="none" stroke="#E8CD6B" stroke-width="2" stroke-dasharray="3,3"/>
+          <line x1="50" y1="70" x2="190" y2="70" stroke="#E8737A" stroke-width="2.5"/>
+          <circle cx="50" cy="70" r="5" fill="#E8CD6B"/>
+          <circle cx="190" cy="70" r="5" fill="#E8CD6B"/>
+          <text x="35" y="65" fill="#E8CD6B" font-weight="bold" font-size="12">A</text>
+          <text x="198" y="65" fill="#E8CD6B" font-weight="bold" font-size="12">B</text>
+          <path d="M 108,160 A 20,20 0 0,1 132,160" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="112" y="152" fill="#E8CD6B" font-size="12">&Delta;&theta;</text>
+          <text x="75" y="130" fill="#5EEAD4" font-size="12">r</text>
+          <text x="155" y="130" fill="#5EEAD4" font-size="12">r</text>
+          <text x="88" y="60" fill="#E8737A" font-size="11" font-weight="bold">&Delta;s &asymp; v&middot;&Delta;t</text>
+        </svg>
+        <div class="proof-caption">2 &middot; Spatial isosceles triangle OAB</div>
+      </div>
+      <div>
+        <h4>Step 2 &mdash; The spatial triangle</h4>
+        <p>OA and OB both equal r, enclosing angle &Delta;&theta;. For small &Delta;t, the chord AB is well approximated by the arc:</p>
+        <span class="proof-eq">&Delta;s &asymp; v &middot; &Delta;t</span>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <line x1="50" y1="160" x2="180" y2="160" stroke="#E8CD6B" stroke-width="3"/>
+          <polygon points="180,160 168,154 168,166" fill="#E8CD6B"/>
+          <text x="105" y="180" fill="#E8CD6B" font-weight="bold" font-size="13">v&#8321;</text>
+          <line x1="50" y1="160" x2="130" y2="40" stroke="#E8CD6B" stroke-width="3"/>
+          <polygon points="130,40 122,52 132,54" fill="#E8CD6B"/>
+          <text x="68" y="100" fill="#E8CD6B" font-weight="bold" font-size="13">v&#8322;</text>
+          <line x1="180" y1="160" x2="130" y2="40" stroke="#E8737A" stroke-width="3"/>
+          <polygon points="130,40 138,52 145,46" fill="#E8737A"/>
+          <text x="163" y="95" fill="#E8737A" font-weight="bold" font-size="14">&Delta;v</text>
+          <path d="M 75,160 A 25,25 0 0,1 66,135" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="80" y="148" fill="#E8CD6B" font-size="12">&Delta;&theta;</text>
+        </svg>
+        <div class="proof-caption">3 &middot; Velocity vector triangle</div>
+      </div>
+      <div>
+        <h4>Step 3 &mdash; Subtract the velocities</h4>
+        <p>Placing <b>v</b>&#8321; and <b>v</b>&#8322; tail-to-tail, the vector from the head of <b>v</b>&#8321; to the head of <b>v</b>&#8322; is &Delta;<b>v</b> = <b>v</b>&#8322; &minus; <b>v</b>&#8321;. Since v &perp; r at every point, the angle between <b>v</b>&#8321; and <b>v</b>&#8322; is also &Delta;&theta;.</p>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <polygon points="30,120 70,120 50,70" fill="none" stroke="#5EEAD4" stroke-width="2"/>
+          <text x="14" y="138" fill="#5EEAD4" font-size="10">Spatial (r, r, &Delta;s)</text>
+          <polygon points="130,120 190,120 160,45" fill="none" stroke="#E8CD6B" stroke-width="2"/>
+          <text x="118" y="138" fill="#E8CD6B" font-size="10">Velocity (v, v, &Delta;v)</text>
+          <text x="95" y="90" fill="#EAF0F6" font-size="20" font-weight="bold">&sim;</text>
+        </svg>
+        <div class="proof-caption">4 &middot; Similar triangles &rarr; the limit</div>
+      </div>
+      <div>
+        <h4>Step 4 &mdash; Similar triangles, then the limit</h4>
+        <p>Both isosceles triangles share vertex angle &Delta;&theta;, so they are similar. Equating side ratios and substituting &Delta;s = v&middot;&Delta;t:</p>
+        <span class="proof-eq">&Delta;v / v = &Delta;s / r = (v&middot;&Delta;t)/r</span>
+        <p style="margin-top:0.5rem;">Dividing by &Delta;t and letting &Delta;t &rarr; 0, &Delta;v/&Delta;t becomes the instantaneous acceleration, directed radially inward:</p>
+        <div class="formula-box"><span data-katex="a = \\frac{v^2}{r} = \\omega^2 r"></span></div>
+      </div>
+    </div>
+
+    <p>As &Delta;&theta; &rarr; 0, the direction of &Delta;v &mdash; and hence of <b>a</b> &mdash; turns to point exactly towards the centre of the circle. This is why it is called <b>centripetal</b> ("centre-seeking") acceleration.</p>
+    <div class="callout misconception">
+      <strong>Common misconception</strong>
+      There is no outward "centrifugal force" acting on the object in this analysis. The only real force(s) present combine to produce a centre-directed <i>resultant</i>, which is what causes the centripetal acceleration. What people call "centrifugal force" is the object's own inertia resisting the change in direction.
+    </div>
+    <div class="callout misconception">
+      <strong>Common misconception</strong>
+      Constant speed does <i>not</i> mean constant velocity, and it does <i>not</i> mean zero acceleration. Velocity is a vector; direction is changing throughout, so acceleration is non-zero even though |v| is fixed.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Interactive simulation</h2>
+    <p>Adjust radius, speed and mass. Toggle each vector or overlay on or off to build up the picture piece by piece, and use the transport controls to freeze the motion and inspect a single instant.</p>
+    ${geminiOrbitHTML('gorb2')}
+  </div>
+
+  <div class="pagenav">
+    <button data-goto="p1">&larr; Back: Foundations</button>
+    <button data-goto="p3">Next: Conical pendulum &rarr;</button>
+  </div>
+</div>
+`;
+
+const PAGE_3 = `
+<div class="page-inner" style="padding-top:2.6rem;">
+  <div class="eyebrow">CIE 9702 &middot; Topic 12.3</div>
+  <h1>The Conical Pendulum</h1>
+  <p>A conical pendulum is a bob on a string that sweeps out a horizontal circle while the string traces the surface of a cone. It is one of the most frequently examined applications of circular motion in 9702.</p>
+
+  <div class="card">
+    <h2>Derivation</h2>
+    <p>The bob travels in a horizontal circle of <b>constant</b> radius, so it has zero acceleration vertically but non-zero (centripetal) acceleration horizontally. The full derivation applies Newton's second law separately in each direction, then combines the two results. Work through it step by step below.</p>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="25" r="4" fill="#EAF0F6"/>
+          <text x="128" y="20" fill="#8AA0BE" font-size="12">O</text>
+          <line x1="120" y1="25" x2="120" y2="150" stroke="#8AA0BE" stroke-width="1.5" stroke-dasharray="4,4"/>
+          <line x1="120" y1="25" x2="195" y2="150" stroke="#E8CD6B" stroke-width="2.5"/>
+          <text x="152" y="80" fill="#E8CD6B" font-size="12" font-weight="bold">L</text>
+          <line x1="120" y1="150" x2="195" y2="150" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="148" y="145" fill="#5EEAD4" font-size="12">r</text>
+          <text x="80" y="95" fill="#8AA0BE" font-size="11">L cos&theta;</text>
+          <path d="M 120,52 A 28,28 0 0,1 136,60" fill="none" stroke="#E8737A" stroke-width="2"/>
+          <text x="126" y="50" fill="#E8737A" font-size="12">&theta;</text>
+          <circle cx="195" cy="150" r="5" fill="#EAF0F6"/>
+          <text x="198" y="168" fill="#EAF0F6" font-size="12">bob</text>
+        </svg>
+        <div class="proof-caption">Geometry: pivot O, string length L, half-angle &theta;</div>
+      </div>
+      <div>
+        <h4>Step 1 &mdash; Set up the geometry</h4>
+        <p>The string has fixed length L and is fixed at pivot O. As the bob sweeps round, the string traces the surface of a cone, staying at a constant angle &theta; to the vertical. The string, the vertical dashed line through O, and the radius r form a right-angled triangle, so:</p>
+        <span class="proof-eq">r = L sin&theta;</span>
+        <span class="proof-eq">vertical drop from O = L cos&theta;</span>
+        <p style="margin-top:0.6rem;">These two relationships are purely geometric &mdash; no forces involved yet &mdash; but both r and L cos&theta; are needed later to eliminate variables.</p>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="150" cy="150" r="5" fill="#EAF0F6"/>
+          <line x1="150" y1="150" x2="70" y2="50" stroke="#E8CD6B" stroke-width="3"/>
+          <polygon points="70,50 82,58 78,66" fill="#E8CD6B"/>
+          <text x="86" y="78" fill="#E8CD6B" font-size="13" font-weight="bold">T</text>
+          <line x1="150" y1="150" x2="150" y2="205" stroke="#E8737A" stroke-width="3"/>
+          <polygon points="150,205 144,193 156,193" fill="#E8737A"/>
+          <text x="158" y="200" fill="#E8737A" font-size="13" font-weight="bold">mg</text>
+          <line x1="150" y1="150" x2="150" y2="60" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="154" y="105" fill="#5EEAD4" font-size="10">Tcos&theta;</text>
+          <line x1="150" y1="150" x2="80" y2="150" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="86" y="143" fill="#5EEAD4" font-size="10">Tsin&theta;</text>
+          <line x1="80" y1="150" x2="80" y2="60" stroke="#8AA0BE" stroke-width="1" stroke-dasharray="2,3"/>
+          <line x1="80" y1="60" x2="150" y2="60" stroke="#8AA0BE" stroke-width="1" stroke-dasharray="2,3"/>
+        </svg>
+        <div class="proof-caption">Free-body diagram: T resolved into perpendicular components</div>
+      </div>
+      <div>
+        <h4>Step 2 &mdash; Identify the forces and resolve T</h4>
+        <p>Only two forces act on the bob: weight mg (vertically down) and string tension T (along the string, towards O). Since these two forces are not parallel, resolve T into a vertical and a horizontal component before applying Newton's second law &mdash; treating T as the hypotenuse of a right triangle of angle &theta;:</p>
+        <span class="proof-eq">vertical component = T cos&theta;</span>
+        <span class="proof-eq">horizontal component = T sin&theta;</span>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="120" r="5" fill="#EAF0F6"/>
+          <line x1="120" y1="120" x2="120" y2="55" stroke="#5EEAD4" stroke-width="3"/>
+          <polygon points="120,55 114,67 126,67" fill="#5EEAD4"/>
+          <text x="128" y="80" fill="#5EEAD4" font-size="13" font-weight="bold">Tcos&theta;</text>
+          <line x1="120" y1="120" x2="120" y2="185" stroke="#E8737A" stroke-width="3"/>
+          <polygon points="120,185 114,173 126,173" fill="#E8737A"/>
+          <text x="128" y="165" fill="#E8737A" font-size="13" font-weight="bold">mg</text>
+          <text x="30" y="125" fill="#8AA0BE" font-size="11">no vertical</text>
+          <text x="30" y="138" fill="#8AA0BE" font-size="11">acceleration</text>
+        </svg>
+        <div class="proof-caption">Vertically: the bob neither rises nor falls</div>
+      </div>
+      <div>
+        <h4>Step 3 &mdash; Newton's second law, vertically</h4>
+        <p>The bob stays in the same horizontal plane throughout, so its vertical acceleration is zero. By Newton's second law (F = ma, with a = 0 vertically), the vertical forces must sum to zero &mdash; the vertical component of tension exactly balances the weight:</p>
+        <div class="formula-box"><span data-katex="T\\cos\\theta = mg \\qquad (1)"></span></div>
+      </div>
+    </div>
+
+    <div class="proof-step">
+      <div class="proof-diagram">
+        <svg viewBox="0 0 240 220">
+          <circle cx="120" cy="120" r="80" fill="none" stroke="#1B3B63" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="120" cy="120" r="4" fill="#EAF0F6"/>
+          <text x="126" y="112" fill="#8AA0BE" font-size="10">centre</text>
+          <circle cx="200" cy="120" r="6" fill="#EAF0F6"/>
+          <text x="203" y="142" fill="#EAF0F6" font-size="11">bob</text>
+          <line x1="200" y1="120" x2="132" y2="120" stroke="#5EEAD4" stroke-width="3"/>
+          <polygon points="132,120 144,114 144,126" fill="#5EEAD4"/>
+          <text x="148" y="112" fill="#5EEAD4" font-size="12" font-weight="bold">Tsin&theta;</text>
+          <line x1="200" y1="120" x2="200" y2="62" stroke="#E8CD6B" stroke-width="2"/>
+          <polygon points="200,62 194,74 206,74" fill="#E8CD6B"/>
+          <text x="205" y="72" fill="#E8CD6B" font-size="12">v</text>
+        </svg>
+        <div class="proof-caption">Horizontally: the unbalanced force points to the centre</div>
+      </div>
+      <div>
+        <h4>Step 4 &mdash; Newton's second law, horizontally</h4>
+        <p>Horizontally there is nothing to balance T sin&theta;: it is the single, unbalanced force on the bob, and it always points towards the centre of the circle as the bob revolves. An unbalanced force directed towards the centre of a circular path is, by definition, the centripetal force required to keep the bob moving on that circle, so:</p>
+        <div class="formula-box"><span data-katex="T\\sin\\theta = \\dfrac{mv^2}{r} = m\\omega^2 r \\qquad (2)"></span></div>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.05rem;color:var(--navy-900);margin:1.5rem 0 0.5rem;">Step 5 &mdash; Divide equation (2) by equation (1) to eliminate T</h3>
+    <p>There are now two equations but three unknowns (T, and either v or &omega;, plus &theta;). T cannot be measured directly, so the standard trick is to divide the two force equations &mdash; T cancels because it appears in both:</p>
+    <div class="formula-box"><span data-katex="\\dfrac{T\\sin\\theta}{T\\cos\\theta} = \\dfrac{m\\omega^2 r}{mg} \\;\\;\\Longrightarrow\\;\\; \\tan\\theta = \\dfrac{\\omega^2 r}{g}"></span></div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.05rem;color:var(--navy-900);margin:1.5rem 0 0.5rem;">Step 6 &mdash; Substitute r = L sin&theta; and solve for &omega;</h3>
+    <p>Substituting the geometric relation from Step 1 (r = L sin&theta;) replaces r with quantities that are fixed for a given pendulum (L) or already present (&theta;):</p>
+    <div class="formula-box"><span data-katex="\\tan\\theta = \\dfrac{\\omega^2 (L\\sin\\theta)}{g} \\;\\;\\Longrightarrow\\;\\; \\dfrac{\\sin\\theta}{\\cos\\theta} = \\dfrac{\\omega^2 L \\sin\\theta}{g}"></span></div>
+    <p>Since sin&theta; &ne; 0 for any real cone (&theta; &gt; 0), it cancels from both sides, leaving:</p>
+    <div class="formula-box"><span data-katex="\\dfrac{1}{\\cos\\theta} = \\dfrac{\\omega^2 L}{g} \\;\\;\\Longrightarrow\\;\\; \\omega^2 = \\dfrac{g}{L\\cos\\theta} \\;\\;\\Longrightarrow\\;\\; \\omega = \\sqrt{\\dfrac{g}{L\\cos\\theta}}"></span></div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.05rem;color:var(--navy-900);margin:1.5rem 0 0.5rem;">Step 7 &mdash; Convert angular speed to period</h3>
+    <p>Finally, using the standard relation &omega; = 2&pi;/t from the angular-quantities page, rearrange for the period t and substitute the result from Step 6:</p>
+    <div class="formula-box"><span data-katex="t = \\dfrac{2\\pi}{\\omega} = 2\\pi\\sqrt{\\dfrac{L\\cos\\theta}{g}}"></span></div>
+
+    <div class="callout">
+      <strong>Results to remember</strong>
+      For a conical pendulum of string length L at half-angle &theta;: r = L sin&theta;, T cos&theta; = mg (vertical), T sin&theta; = mv&sup2;/r = m&omega;&sup2;r (horizontal, centripetal), &omega; = &radic;(g / L cos&theta;), and t = 2&pi;&radic;(L cos&theta; / g). Notice the period does <i>not</i> depend on the mass m &mdash; it cancelled out of equation (1) &divide; equation (2) along with T.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3D interactive simulation</h2>
+    <p>Adjust the string length, half-angle and bob mass. Toggle weight (mg), full tension (T), and the resolved components (T cos&theta;, T sin&theta;) independently or all at once &mdash; each is labelled clearly so you can see exactly which equation each arrow represents.</p>
+    ${geminiConicalHTML('gcon')}
+  </div>
+
+  <div class="card">
+    <span class="section-num">Core assessment</span>
+    <h2>Ready for the mixed test?</h2>
+    <p>The core assessment covers Pages 1&ndash;3 &mdash; everything you've just worked through is 9702 syllabus content.</p>
+    <button class="btn" data-goto="passess">Go to core assessment &rarr;</button>
+  </div>
+
+  <div class="pagenav">
+    <button data-goto="p2">&larr; Back: Centripetal acceleration</button>
+    <button data-goto="passess">Next: Assessment &rarr;</button>
+  </div>
+</div>
+`;
+
+const PAGE_ASSESS = `
+<div class="page-inner" style="padding-top:2.6rem;">
+  <div class="eyebrow">Practice &amp; Graded Assessment</div>
+  <h1>Practice &amp; Assessment</h1>
+  <p>Work through the example, try the ungraded foundations practice, then take the graded core assessment covering Pages 1&ndash;3.</p>
+
+  <div class="card">
+    <span class="section-num">Reference</span>
+    <h2>Formula sheet &mdash; Topic 12: Circular Motion</h2>
+    <p>Every relationship examinable below, grouped by the page it comes from. Symbols: s = arc length, r = radius, &theta; = angle, t = time, T = period, f = frequency, v = linear (tangential) speed, &omega; = angular velocity, m = mass, F = resultant (centripetal) force, a = centripetal acceleration, L = string length, g = acceleration of free fall.</p>
+
+    <h3 class="formula-group-title">Angular quantities <span class="formula-group-tag">Page 1 &middot; Foundations</span></h3>
+    <table class="eq-table">
+      <thead><tr><th>Quantity</th><th>Formula</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Angular displacement</td><td>&theta; = s / r</td><td>Radian definition, from arc length s</td></tr>
+        <tr><td>Angular velocity</td><td>&omega; = &theta;/t = 2&pi;/T = 2&pi;f</td><td>Rate of change of &theta;</td></tr>
+        <tr><td>Period &amp; frequency</td><td>T = 1/f</td><td>T in seconds, f in hertz</td></tr>
+        <tr><td>Linear (tangential) speed</td><td>v = &omega;r</td><td>Speed along the circular path itself</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="formula-group-title">Centripetal acceleration &amp; force <span class="formula-group-tag">Page 2</span></h3>
+    <table class="eq-table">
+      <thead><tr><th>Quantity</th><th>Formula</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Centripetal acceleration</td><td>a = v&sup2;/r = &omega;&sup2;r</td><td>Always directed towards the centre</td></tr>
+        <tr><td>Centripetal (resultant) force</td><td>F = mv&sup2;/r = m&omega;&sup2;r</td><td>From F = ma &mdash; the <i>resultant</i> of the real forces present, not a separate force</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="formula-group-title">Conical pendulum <span class="formula-group-tag">Page 3</span></h3>
+    <table class="eq-table">
+      <thead><tr><th>Quantity</th><th>Formula</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Radius of path</td><td>r = L sin&theta;</td><td>From string length L and angle &theta; to the vertical</td></tr>
+        <tr><td>Vertical equilibrium</td><td>T cos&theta; = mg</td><td>Bob has zero vertical acceleration</td></tr>
+        <tr><td>Horizontal resultant</td><td>T sin&theta; = mv&sup2;/r = m&omega;&sup2;r</td><td>The unbalanced force providing the centripetal force</td></tr>
+        <tr><td>Angular velocity</td><td>&omega; = &radic;(g / L cos&theta;)</td><td>Independent of mass m</td></tr>
+        <tr><td>Period of revolution</td><td>t = 2&pi;&radic;(L cos&theta; / g)</td><td>Independent of mass m</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Not on the core assessment</strong>
+      Vertical circular motion (mg + N<sub>top</sub> = mv&sup2;<sub>top</sub>/r, giving v<sub>top,min</sub> = &radic;(gr)) is enrichment only, covered on the Beyond the Syllabus page. It will not appear in the graded questions below.
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="section-num">Worked example</span>
+    <h3>A point on a spinning disc</h3>
+    <p>A disc of radius 0.15 m rotates at 300 revolutions per minute. Find (a) its period, (b) its angular velocity, (c) the linear speed of a point on its rim.</p>
+    <p><b>(a)</b> f = 300/60 = 5.0 Hz &rArr; T = 1/f = 0.20 s.<br>
+    <b>(b)</b> &omega; = 2&pi;f = 2&pi;(5.0) = 31.4 rad s&#8315;&sup1;.<br>
+    <b>(c)</b> v = &omega;r = 31.4 &times; 0.15 = 4.71 m s&#8315;&sup1;.</p>
+  </div>
+
+  <div class="card">
+    <span class="section-num">Practice &middot; ungraded</span>
+    <h2>Foundations practice &mdash; 10 questions</h2>
+    <div id="quiz1"></div>
+  </div>
+
+  <div class="card">
+    <span class="section-num">Graded</span>
+    <h2>Core assessment &mdash; 12 questions</h2>
+    <p>Drawn from Pages 1&ndash;3 (Foundations, Centripetal Acceleration, Conical Pendulum) &mdash; all core 9702 syllabus content. This is the only graded assessment in the module.</p>
+    <div id="quizCore"></div>
+  </div>
+
+  <div class="summary-box" id="summaryBox" style="display:none;">
+    <h3>Summary</h3>
+    <p id="summaryText"></p>
+    <button class="btn" onclick="window.print()">Print / save summary</button>
+    <p style="margin-top:0.9rem;font-family:'Fraunces',serif;font-style:italic;color:var(--gold-600);font-size:0.85rem;">&mdash; Prepared by <b style="font-weight:600;">Sir Daniel</b></p>
+  </div>
+  <div class="pagenav">
+    <button data-goto="p3">&larr; Back: Conical pendulum</button>
+    <button data-goto="e1">Explore: Beyond the syllabus &rarr;</button>
+  </div>
+</div>
+`;
+
+const PAGE_E1 = `
+<div class="page-inner" style="padding-top:2.6rem;">
+  <div class="beyond-banner"><span class="icon">&#9888;</span><div><b>Not examinable in CIE 9702</b>This section is enrichment only. Vertical circular motion appears occasionally as an applied "resultant force provides centripetal force" past-paper question, but it is not a named 9702 subtopic and is excluded from the graded core assessment.</div></div>
+  <h1>Vertical Circular Motion</h1>
+  <p>Unlike horizontal circular motion, the speed of an object on a vertical circle is <i>not</i> constant &mdash; gravity does work on it as it rises and falls. The critical case examined is the minimum speed needed to maintain contact at the top of the loop.</p>
+
+  <div class="card">
+    <h2>Key relations</h2>
+    <div class="formula-box"><span data-katex="\\text{Top: } mg + N_{top} = \\dfrac{mv_{top}^2}{r} \\qquad \\text{Bottom: } N_{bot} - mg = \\dfrac{mv_{bot}^2}{r}"></span></div>
+    <p>The minimum speed at the top occurs when N<sub>top</sub> = 0, i.e. gravity alone provides the centripetal force:</p>
+    <div class="formula-box"><span data-katex="v_{top,min} = \\sqrt{gr}"></span></div>
+  </div>
+
+  <div class="card">
+    <h2>Interactive simulation</h2>
+    <div class="sim-panel" id="panel5" data-base-w="360" data-base-h="340">
+      <div class="sim-stage" style="flex-direction:column;">
+        <button class="sim-fullscreen-btn" onclick="toggleSimFullscreen('panel5','sim5Canvas',360,340)">&#9974; Fullscreen</button>
+        <div class="sim-toolbar">
+          <button id="s5_playpause">Pause</button>
+          <button id="s5_reset">Reset</button>
+        </div>
+        <canvas id="sim5Canvas" width="360" height="340"></canvas>
+        <p class="sim-drag-hint">Tip: drag the ball around the loop, or use &#9974; to enlarge.</p>
+      </div>
+      <div class="sim-controls">
+        <div class="control-row"><label>Radius, r <span class="val" id="s5_r_val"></span></label>
+          <input type="range" id="s5_r" min="0.3" max="2" step="0.01" value="1"></div>
+        <div class="control-row"><label>Mass, m <span class="val" id="s5_m_val"></span></label>
+          <input type="range" id="s5_m" min="0.1" max="3" step="0.01" value="0.5"></div>
+        <div class="control-row"><label>Speed at top, v<sub>top</sub> <span class="val" id="s5_v_val"></span></label>
+          <input type="range" id="s5_v" min="0.5" max="10" step="0.05" value="3"></div>
+        <div class="toggle-row">
+          <label class="toggle-chip"><input type="checkbox" id="s5_show_t" checked><span class="swatch" style="background:var(--arrow-tension)"></span>Tension/normal</label>
+          <label class="toggle-chip"><input type="checkbox" id="s5_show_w" checked><span class="swatch" style="background:var(--arrow-weight)"></span>Weight</label>
+        </div>
+        <div class="readouts">
+          <div><span>Min speed at top</span><b id="s5_out_min">&mdash;</b></div>
+          <div><span>Status</span><b id="s5_out_status">&mdash;</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenav">
+    <button data-goto="passess">&larr; Back: Assessment</button>
+    <button data-goto="e2">Next: Applications gallery &rarr;</button>
+  </div>
+</div>
+`;
+
+const PAGE_E2 = `
+<div class="page-inner" style="padding-top:2.6rem;">
+  <div class="beyond-banner"><span class="icon">&#9888;</span><div><b>Cross-topic / motivational only</b>Satellite motion belongs to Gravitational Fields (9702 Topic 13), reusing circular-motion equations as a bridge rather than being 9702 Topic 12 content itself. Centrifuges are included purely for real-world motivation and carry no attached 9702 learning outcome.</div></div>
+  <h1>Real-World Applications Gallery</h1>
+  <div class="gallery-grid">
+    <div class="gallery-card">
+      <span class="tag">Topic 13 bridge</span>
+      <h3>Geostationary satellites</h3>
+      <p>A geostationary satellite's centripetal force is provided entirely by gravity: GMm/r&sup2; = m&omega;&sup2;r. Four conditions must all hold:</p>
+      <ol>
+        <li>Period T = 24 hours (matching Earth's rotation)</li>
+        <li>Orbit lies in the equatorial plane</li>
+        <li>Orbit is circular, centred on Earth's centre</li>
+        <li>Direction of motion matches Earth's spin (west &rarr; east)</li>
+      </ol>
+    </div>
+    <div class="gallery-card">
+      <span class="tag">Motivational only</span>
+      <h3>Centrifuges</h3>
+      <p>A centrifuge spins samples at very high &omega; so that dense components experience a large centripetal force requirement and separate out from less dense ones &mdash; the same F = m&omega;&sup2;r relationship you met on Page 2, just at much higher angular velocities.</p>
+    </div>
+  </div>
+  <div class="pagenav">
+    <button data-goto="e1">&larr; Back: Vertical circular motion</button>
+    <span></span>
+  </div>
+</div>
+`;
+
+/* ============================================================
+   ROUTER + INIT
+   ============================================================ */
+const PAGES = {
+  p1: PAGE_1, p2: PAGE_2, p3: PAGE_3,
+  passess: PAGE_ASSESS, e1: PAGE_E1, e2: PAGE_E2
+};
+const initialized = {};
+
+function renderKatexIn(root){
+  if (window.katex){
+    document.querySelectorAll('#'+root+' [data-katex]').forEach(spanEl=>{
+      katex.render(spanEl.getAttribute('data-katex'), spanEl, {throwOnError:false, displayMode:true});
+    });
+  }
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.navlist button').forEach(b=>b.classList.toggle('active', b.dataset.page===id));
+  window.scrollTo({top:0,behavior:'instant' in window ? 'instant':'auto'});
+  if (!initialized[id]){
+    initialized[id] = true;
+    renderKatexIn('page-'+id);
+    initPage(id);
+  }
+}
+
+function renderSummary(){
+  if (!window.__coreScore) return;
+  const box = document.getElementById('summaryBox');
+  const text = document.getElementById('summaryText');
+  if (!box) return;
+  const {correct,total} = window.__coreScore;
+  const pct = Math.round(100*correct/total);
+  let msg = `You scored ${correct} / ${total} (${pct}%) on the core assessment. `;
+  if (pct >= 80) msg += 'Strong grasp of circular motion — you are ready for mixed past-paper questions on this topic.';
+  else if (pct >= 50) msg += 'Solid foundation — revisit the pages linked to any question you missed before moving on.';
+  else msg += 'Work back through Pages 1–3, focusing on the derivations, before re-attempting this assessment.';
+  text.textContent = msg;
+  box.style.display = 'block';
+}
+
+function initPage(id){
+  if (id==='p1') { initHero(); initSim1(); }
+  if (id==='p2') initSim2();
+  if (id==='p3') initSim3();
+  if (id==='passess') { buildQuiz('quiz1', QUIZ_P1); buildQuiz('quizCore', QUIZ_CORE, {graded:true}); }
+  if (id==='e1') initSim5();
+}
+
+/* ---------- Page 1: hero ---------- */
+function initHero(){
+  const cv = document.getElementById('heroCanvas');
+  const ctx = cv.getContext('2d');
+  const cx=180, cy=150, r=90;
+  let ang=0;
+  function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle='rgba(94,234,212,0.35)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke();
+    const x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--gold-500');
+    ctx.beginPath(); ctx.arc(x,y,8,0,2*Math.PI); ctx.fill();
+    const tx = x - Math.sin(ang)*36, ty = y + Math.cos(ang)*36;
+    drawArrow(ctx, x, y, tx, ty, '#5EEAD4', 2.5, 8);
+    ang += 0.018;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* ---------- Gemini-code orbit simulation engine (reused on Pages 1 & 2) ---------- */
+function gDrawLabel(targetCtx, text, x, y, color){
+  targetCtx.font = 'bold 12px sans-serif';
+  const padding = 4;
+  const metrics = targetCtx.measureText(text);
+  const w = metrics.width + padding * 2;
+  const h = 16;
+  targetCtx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  targetCtx.fillRect(x - padding, y - h + 2, w, h);
+  targetCtx.strokeStyle = color;
+  targetCtx.lineWidth = 1;
+  targetCtx.strokeRect(x - padding, y - h + 2, w, h);
+  targetCtx.fillStyle = color;
+  targetCtx.fillText(text, x, y);
+}
+function gDrawArrow(targetCtx, fromx, fromy, tox, toy, color, width = 3){
+  const headlen = 10;
+  const dx = tox - fromx;
+  const dy = toy - fromy;
+  const angle = Math.atan2(dy, dx);
+  targetCtx.strokeStyle = color;
+  targetCtx.fillStyle = color;
+  targetCtx.lineWidth = width;
+  targetCtx.beginPath();
+  targetCtx.moveTo(fromx, fromy);
+  targetCtx.lineTo(tox, toy);
+  targetCtx.stroke();
+  targetCtx.beginPath();
+  targetCtx.moveTo(tox, toy);
+  targetCtx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+  targetCtx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  targetCtx.closePath();
+  targetCtx.fill();
+}
+function gDrawEarth(targetCtx, cx, cy, r){
+  targetCtx.save();
+  const outerGlow = targetCtx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r * 1.5);
+  outerGlow.addColorStop(0, 'rgba(56, 189, 248, 0.5)');
+  outerGlow.addColorStop(0.5, 'rgba(14, 165, 233, 0.2)');
+  outerGlow.addColorStop(1, 'rgba(14, 165, 233, 0)');
+  targetCtx.fillStyle = outerGlow;
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  const oceanGrad = targetCtx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r);
+  oceanGrad.addColorStop(0, '#2563eb');
+  oceanGrad.addColorStop(0.7, '#1d4ed8');
+  oceanGrad.addColorStop(1, '#0f172a');
+  targetCtx.fillStyle = oceanGrad;
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, r, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, r, 0, Math.PI * 2);
+  targetCtx.clip();
+
+  targetCtx.fillStyle = '#22c55e';
+  targetCtx.beginPath();
+  targetCtx.arc(cx - r * 0.3, cy - r * 0.35, r * 0.4, 0, Math.PI * 2);
+  targetCtx.arc(cx + r * 0.2, cy - r * 0.4, r * 0.3, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  targetCtx.beginPath();
+  targetCtx.arc(cx - r * 0.1, cy + r * 0.2, r * 0.35, 0, Math.PI * 2);
+  targetCtx.arc(cx + r * 0.35, cy + r * 0.3, r * 0.25, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  targetCtx.fillStyle = '#f8fafc';
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy - r * 0.85, r * 0.35, 0, Math.PI * 2);
+  targetCtx.arc(cx, cy + r * 0.85, r * 0.3, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  targetCtx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+  targetCtx.beginPath();
+  targetCtx.arc(cx - r * 0.2, cy - r * 0.1, r * 0.5, 0.2, Math.PI * 0.8);
+  targetCtx.arc(cx + r * 0.1, cy + r * 0.4, r * 0.4, 1.2, Math.PI * 1.6);
+  targetCtx.fill();
+
+  const shadowGrad = targetCtx.createRadialGradient(cx - r * 0.4, cy - r * 0.4, r * 0.6, cx + r * 0.2, cy + r * 0.2, r * 1.1);
+  shadowGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  shadowGrad.addColorStop(1, 'rgba(2, 6, 23, 0.65)');
+  targetCtx.fillStyle = shadowGrad;
+  targetCtx.beginPath();
+  targetCtx.arc(cx, cy, r, 0, Math.PI * 2);
+  targetCtx.fill();
+
+  targetCtx.restore();
+}
+function gDrawSatellite(targetCtx, x, y, angle){
+  targetCtx.save();
+  targetCtx.translate(x, y);
+  targetCtx.rotate(-angle);
+
+  targetCtx.fillStyle = '#38bdf8';
+  targetCtx.strokeStyle = '#f8fafc';
+  targetCtx.lineWidth = 1;
+
+  targetCtx.fillRect(-26, -5, 12, 10);
+  targetCtx.strokeRect(-26, -5, 12, 10);
+
+  targetCtx.fillRect(14, -5, 12, 10);
+  targetCtx.strokeRect(14, -5, 12, 10);
+
+  targetCtx.strokeStyle = '#94a3b8';
+  targetCtx.lineWidth = 2;
+  targetCtx.beginPath();
+  targetCtx.moveTo(-14, 0); targetCtx.lineTo(-6, 0);
+  targetCtx.moveTo(6, 0); targetCtx.lineTo(14, 0);
+  targetCtx.stroke();
+
+  targetCtx.fillStyle = '#facc15';
+  targetCtx.strokeStyle = '#f8fafc';
+  targetCtx.lineWidth = 1.5;
+  targetCtx.fillRect(-6, -7, 12, 14);
+  targetCtx.strokeRect(-6, -7, 12, 14);
+
+  targetCtx.fillStyle = '#f8fafc';
+  targetCtx.beginPath();
+  targetCtx.arc(0, -9, 5, Math.PI, 0);
+  targetCtx.fill();
+
+  targetCtx.restore();
+}
+
+function createGeminiOrbitSim(prefix){
+  const canvas = document.getElementById(prefix+'_canvas');
+  const ctx = canvas.getContext('2d');
+
+  const radiusInput = document.getElementById(prefix+'_radiusInput');
+  const omegaInput = document.getElementById(prefix+'_omegaInput');
+  const directionSelect = document.getElementById(prefix+'_directionSelect');
+  const angleUnitSelect = document.getElementById(prefix+'_angleUnitSelect');
+  const pauseBtn = document.getElementById(prefix+'_pauseBtn');
+  const resetBtn = document.getElementById(prefix+'_resetBtn');
+
+  const showRadius = document.getElementById(prefix+'_showRadius');
+  const showArc = document.getElementById(prefix+'_showArc');
+  const showChord = document.getElementById(prefix+'_showChord');
+  const showVel = document.getElementById(prefix+'_showVel');
+  const showForce = document.getElementById(prefix+'_showForce');
+  const showAngle = document.getElementById(prefix+'_showAngle');
+  const showTime = document.getElementById(prefix+'_showTime');
+  const showGrid = document.getElementById(prefix+'_showGrid');
+
+  const rVal = document.getElementById(prefix+'_rVal');
+  const wVal = document.getElementById(prefix+'_wVal');
+  const timeOut = document.getElementById(prefix+'_timeOut');
+  const vOut = document.getElementById(prefix+'_vOut');
+  const thetaOut = document.getElementById(prefix+'_thetaOut');
+  const arcOut = document.getElementById(prefix+'_arcOut');
+  const dispOut = document.getElementById(prefix+'_dispOut');
+  const omegaOut = document.getElementById(prefix+'_omegaOut');
+
+  let isRunning = true;
+  let lastTime = performance.now();
+  let scale = 90;
+  let elapsedTime = 0;
+  let isDragging = false;
+
+  let radius = parseFloat(radiusInput.value);
+  let speedMag = parseFloat(omegaInput.value);
+  let direction = parseInt(directionSelect.value);
+
+  let initialAngle = 0;
+  let currentAngle = 0;
+
+  function resetToThreeFifteen(){
+    initialAngle = 0;
+    currentAngle = 0;
+    elapsedTime = 0;
+  }
+
+  pauseBtn.addEventListener('click', () => {
+    isRunning = !isRunning;
+    pauseBtn.textContent = isRunning ? 'Pause' : 'Resume';
+  });
+
+  resetBtn.addEventListener('click', resetToThreeFifteen);
+
+  radiusInput.addEventListener('input', (e) => {
+    radius = parseFloat(e.target.value);
+    rVal.textContent = radius.toFixed(1) + ' m';
+  });
+
+  omegaInput.addEventListener('input', (e) => {
+    speedMag = parseFloat(e.target.value);
+    wVal.textContent = speedMag.toFixed(1) + ' rad/s';
+  });
+
+  directionSelect.addEventListener('change', (e) => {
+    direction = parseInt(e.target.value);
+  });
+
+  function formatAngle(rad){
+    const unit = angleUnitSelect.value;
+    if (unit === 'pirad'){
+      const piVal = rad / Math.PI;
+      return piVal.toFixed(2) + ' π rad';
+    } else {
+      const degVal = rad * (180 / Math.PI);
+      return degVal.toFixed(1) + '°';
+    }
+  }
+
+  function getMousePos(e){
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+
+  function setAngleFromCursor(pos){
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const dx = pos.x - centerX;
+    const dy = centerY - pos.y;
+    let angle = Math.atan2(dy, dx);
+
+    let dAngle = angle - (currentAngle % (Math.PI * 2));
+    while (dAngle > Math.PI) dAngle -= Math.PI * 2;
+    while (dAngle < -Math.PI) dAngle += Math.PI * 2;
+
+    currentAngle += dAngle;
+    if (speedMag !== 0){
+      elapsedTime = Math.abs((currentAngle - initialAngle) / speedMag);
+    }
+  }
+
+  function isPointerOverObject(pos){
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const rPx = radius * scale;
+    const bx = centerX + rPx * Math.cos(currentAngle);
+    const by = centerY - rPx * Math.sin(currentAngle);
+    const dist = Math.hypot(pos.x - bx, pos.y - by);
+    return dist < 25;
+  }
+
+  function handlePointerStart(e){
+    const pos = getMousePos(e);
+    if (isPointerOverObject(pos)){
+      isDragging = true;
+      canvas.style.cursor = 'grabbing';
+    }
+  }
+
+  function handlePointerMove(e){
+    const pos = getMousePos(e);
+    if (isDragging){
+      setAngleFromCursor(pos);
+    } else {
+      canvas.style.cursor = isPointerOverObject(pos) ? 'grab' : 'default';
+    }
+  }
+
+  function handlePointerEnd(){
+    isDragging = false;
+    canvas.style.cursor = 'default';
+  }
+
+  canvas.addEventListener('mousedown', handlePointerStart);
+  canvas.addEventListener('mousemove', handlePointerMove);
+  window.addEventListener('mouseup', handlePointerEnd);
+
+  canvas.addEventListener('touchstart', (e) => { handlePointerStart(e); e.preventDefault(); }, {passive:false});
+  canvas.addEventListener('touchmove', (e) => { handlePointerMove(e); e.preventDefault(); }, {passive:false});
+  window.addEventListener('touchend', handlePointerEnd);
+
+  function updateAndRender(now){
+    const dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    const omega = speedMag * direction;
+
+    if (isRunning && !isDragging){
+      currentAngle += omega * dt;
+      elapsedTime += dt;
+    }
+
+    let deltaTheta = currentAngle - initialAngle;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    if (showGrid.checked){
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY);
+      ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height);
+      ctx.stroke();
+    }
+
+    gDrawEarth(ctx, centerX, centerY, 38);
+
+    const rPx = radius * scale;
+
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, rPx, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const ax = centerX + rPx * Math.cos(initialAngle);
+    const ay = centerY - rPx * Math.sin(initialAngle);
+
+    const bx = centerX + rPx * Math.cos(currentAngle);
+    const by = centerY - rPx * Math.sin(currentAngle);
+
+    if (showAngle.checked){
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, rPx * 0.35, -currentAngle, -initialAngle, omega < 0);
+      ctx.closePath();
+      ctx.fill();
+
+      const midAngle = (initialAngle + currentAngle) / 2;
+      const labelX = centerX + (rPx * 0.48) * Math.cos(midAngle);
+      const labelY = centerY - (rPx * 0.48) * Math.sin(midAngle) - 18;
+      gDrawLabel(ctx, 'Δθ = ' + formatAngle(Math.abs(deltaTheta)), labelX - 25, labelY, '#38bdf8');
+    }
+
+    if (showArc.checked){
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, rPx, -currentAngle, -initialAngle, omega < 0);
+      ctx.stroke();
+    }
+
+    if (showChord.checked){
+      ctx.strokeStyle = '#ec4899';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      gDrawLabel(ctx, 'Δr', (ax + bx) / 2 + 10, (ay + by) / 2 - 10, '#ec4899');
+    }
+
+    if (showRadius.checked){
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(ax, ay);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(bx, by);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath(); ctx.arc(ax, ay, 5, 0, Math.PI * 2); ctx.fill();
+    gDrawLabel(ctx, 'Start (t=0)', ax + 12, ay + 15, '#cbd5e1');
+
+    gDrawSatellite(ctx, bx, by, currentAngle);
+
+    if (showVel.checked && speedMag !== 0){
+      const vMag = radius * omega;
+      const vScale = 22;
+      const vx = -Math.sin(currentAngle) * vMag * vScale;
+      const vy = -Math.cos(currentAngle) * vMag * vScale;
+
+      gDrawArrow(ctx, bx, by, bx + vx, by + vy, '#4ade80');
+      gDrawLabel(ctx, 'v', bx + vx + (vx >= 0 ? 10 : -20), by + vy + (vy >= 0 ? 15 : -10), '#4ade80');
+    }
+
+    if (showForce.checked){
+      const forceLen = 65;
+      const fx = bx - forceLen * Math.cos(currentAngle);
+      const fy = by + forceLen * Math.sin(currentAngle);
+
+      gDrawArrow(ctx, bx, by, fx, fy, '#f87171');
+      const midFx = (bx + fx) / 2;
+      const midFy = (by + fy) / 2;
+      gDrawLabel(ctx, 'Fc', midFx - 10, midFy + 22, '#f87171');
+    }
+
+    if (showTime.checked){
+      gDrawLabel(ctx, 'Elapsed Time (Δt): ' + elapsedTime.toFixed(2) + ' s', 20, 35, '#f8fafc');
+    }
+
+    const absTheta = Math.abs(deltaTheta);
+    const arcLength = radius * absTheta;
+    const straightDisp = 2 * radius * Math.sin(absTheta / 2);
+
+    timeOut.textContent = elapsedTime.toFixed(2) + ' s';
+    vOut.textContent = (Math.abs(radius * speedMag)).toFixed(2) + ' m/s';
+    thetaOut.textContent = formatAngle(absTheta);
+    arcOut.textContent = arcLength.toFixed(2) + ' m';
+    dispOut.textContent = straightDisp.toFixed(2) + ' m';
+    omegaOut.textContent = omega.toFixed(2) + ' rad/s';
+
+    requestAnimationFrame(updateAndRender);
+  }
+  requestAnimationFrame(updateAndRender);
+}
+function initSim1(){ createGeminiOrbitSim('gorb1'); }
+function initSim2(){ createGeminiOrbitSim('gorb2'); }
+function getCSS(varName){
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+/* ---------- Page 3: conical pendulum (Gemini-code engine) ---------- */
+function initSim3(){ createGeminiConicalSim('gcon'); }
+
+function createGeminiConicalSim(prefix){
+  const conicalCanvas = document.getElementById(prefix+'_canvas');
+  const cCtx = conicalCanvas.getContext('2d');
+
+  const lengthInput = document.getElementById(prefix+'_lengthInput');
+  const thetaInput = document.getElementById(prefix+'_thetaInput');
+  const massInput = document.getElementById(prefix+'_massInput');
+
+  const lVal = document.getElementById(prefix+'_lVal');
+  const thetaAngleVal = document.getElementById(prefix+'_thetaAngleVal');
+  const mVal = document.getElementById(prefix+'_mVal');
+
+  const conicalPauseBtn = document.getElementById(prefix+'_pauseBtn');
+  const conicalResetBtn = document.getElementById(prefix+'_resetBtn');
+
+  const showTension = document.getElementById(prefix+'_showTension');
+  const showWeight = document.getElementById(prefix+'_showWeight');
+  const showFc = document.getElementById(prefix+'_showFc');
+  const showComponents = document.getElementById(prefix+'_showComponents');
+  const showConicalVel = document.getElementById(prefix+'_showConicalVel');
+  const showConeGeometry = document.getElementById(prefix+'_showConeGeometry');
+
+  const cRadiusOut = document.getElementById(prefix+'_cRadiusOut');
+  const cHeightOut = document.getElementById(prefix+'_cHeightOut');
+  const cTensionOut = document.getElementById(prefix+'_cTensionOut');
+  const cFcOut = document.getElementById(prefix+'_cFcOut');
+  const cOmegaOut = document.getElementById(prefix+'_cOmegaOut');
+  const cPeriodOut = document.getElementById(prefix+'_cPeriodOut');
+
+  let isConicalRunning = true;
+  let conicalLastTime = performance.now();
+  let conicalPhi = 0; // Orbital angle around vertical axis
+  const g = 9.81;
+
+  conicalPauseBtn.addEventListener('click', () => {
+    isConicalRunning = !isConicalRunning;
+    conicalPauseBtn.textContent = isConicalRunning ? 'Pause' : 'Resume';
+  });
+
+  conicalResetBtn.addEventListener('click', () => {
+    conicalPhi = 0;
+  });
+
+  lengthInput.addEventListener('input', (e) => {
+    lVal.textContent = parseFloat(e.target.value).toFixed(1) + ' m';
+  });
+
+  thetaInput.addEventListener('input', (e) => {
+    thetaAngleVal.textContent = e.target.value + '°';
+  });
+
+  massInput.addEventListener('input', (e) => {
+    mVal.textContent = parseFloat(e.target.value).toFixed(1) + ' kg';
+  });
+
+  function renderConicalPendulum(now){
+    const dt = (now - conicalLastTime) / 1000;
+    conicalLastTime = now;
+
+    const L = parseFloat(lengthInput.value);
+    const thetaDeg = parseFloat(thetaInput.value);
+    const thetaRad = thetaDeg * (Math.PI / 180);
+    const mass = parseFloat(massInput.value);
+
+    // Physics Calculations
+    const r = L * Math.sin(thetaRad);
+    const h = L * Math.cos(thetaRad);
+    const omega = Math.sqrt(g / (L * Math.cos(thetaRad)));
+    const period = (2 * Math.PI) / omega;
+    const tension = (mass * g) / Math.cos(thetaRad);
+    const Fc = mass * g * Math.tan(thetaRad);
+    const vLinear = omega * r;
+
+    if (isConicalRunning){
+      conicalPhi += omega * dt;
+    }
+
+    // Update Readout Elements
+    cRadiusOut.textContent = r.toFixed(2) + ' m';
+    cHeightOut.textContent = h.toFixed(2) + ' m';
+    cTensionOut.textContent = tension.toFixed(2) + ' N';
+    cFcOut.textContent = Fc.toFixed(2) + ' N';
+    cOmegaOut.textContent = omega.toFixed(2) + ' rad/s';
+    cPeriodOut.textContent = period.toFixed(2) + ' s';
+
+    cCtx.clearRect(0, 0, conicalCanvas.width, conicalCanvas.height);
+
+    // Projection Scaling Parameters
+    const apexX = conicalCanvas.width / 2;
+    const apexY = 120;
+    const scalePx = 110; // Pixels per meter
+
+    const hPx = h * scalePx;
+    const rPx = r * scalePx;
+
+    const circleCenterY = apexY + hPx;
+    const tiltFactor = 0.35; // Perspective squishing for 3D ellipse projection
+
+    // Bob coordinates in 3D projection
+    const bobX = apexX + rPx * Math.cos(conicalPhi);
+    const bobY = circleCenterY - rPx * Math.sin(conicalPhi) * tiltFactor;
+
+    // Draw Support Ceiling Block
+    cCtx.fillStyle = '#334155';
+    cCtx.fillRect(apexX - 60, apexY - 15, 120, 15);
+    cCtx.strokeStyle = '#64748b';
+    cCtx.lineWidth = 2;
+    cCtx.strokeRect(apexX - 60, apexY - 15, 120, 15);
+
+    // Draw Pivot Joint Point
+    cCtx.fillStyle = '#f8fafc';
+    cCtx.beginPath();
+    cCtx.arc(apexX, apexY, 6, 0, Math.PI * 2);
+    cCtx.fill();
+
+    // Draw Cone Geometry & Vertical Axis
+    if (showConeGeometry.checked){
+      // Vertical Center Axis
+      cCtx.strokeStyle = '#475569';
+      cCtx.lineWidth = 1.5;
+      cCtx.setLineDash([4, 4]);
+      cCtx.beginPath();
+      cCtx.moveTo(apexX, apexY);
+      cCtx.lineTo(apexX, circleCenterY + 40);
+      cCtx.stroke();
+
+      // Cone Envelope Lines (outer edges)
+      cCtx.strokeStyle = '#1e293b';
+      cCtx.lineWidth = 1;
+      cCtx.beginPath();
+      cCtx.moveTo(apexX, apexY);
+      cCtx.lineTo(apexX - rPx, circleCenterY);
+      cCtx.moveTo(apexX, apexY);
+      cCtx.lineTo(apexX + rPx, circleCenterY);
+      cCtx.stroke();
+
+      // Horizontal Radius Line to center of circle
+      cCtx.strokeStyle = '#38bdf8';
+      cCtx.setLineDash([3, 3]);
+      cCtx.beginPath();
+      cCtx.moveTo(apexX, circleCenterY);
+      cCtx.lineTo(bobX, bobY);
+      cCtx.stroke();
+      cCtx.setLineDash([]);
+      gDrawLabel(cCtx, 'r = ' + r.toFixed(2) + 'm', (apexX + bobX) / 2, (circleCenterY + bobY) / 2 - 8, '#38bdf8');
+
+      // Theta angle arc at apex
+      cCtx.strokeStyle = '#f59e0b';
+      cCtx.lineWidth = 2;
+      cCtx.beginPath();
+      cCtx.arc(apexX, apexY, 35, Math.PI / 2, Math.PI / 2 + (bobX > apexX ? thetaRad : -thetaRad), bobX < apexX);
+      cCtx.stroke();
+      gDrawLabel(cCtx, 'θ = ' + thetaDeg + '°', apexX + (bobX > apexX ? 12 : -35), apexY + 48, '#f59e0b');
+    }
+
+    // Orbit Ellipse Track (Horizontal Circular Path)
+    cCtx.strokeStyle = '#334155';
+    cCtx.lineWidth = 2;
+    cCtx.setLineDash([5, 5]);
+    cCtx.beginPath();
+    cCtx.ellipse(apexX, circleCenterY, rPx, rPx * tiltFactor, 0, 0, Math.PI * 2);
+    cCtx.stroke();
+    cCtx.setLineDash([]);
+
+    // Draw Pendulum Suspension String
+    cCtx.strokeStyle = '#94a3b8';
+    cCtx.lineWidth = 2.5;
+    cCtx.beginPath();
+    cCtx.moveTo(apexX, apexY);
+    cCtx.lineTo(bobX, bobY);
+    cCtx.stroke();
+
+    // Force Vector Scale
+    const forceScale = 6.0;
+
+    // 1. Weight Vector (W = mg) - pointing straight down
+    if (showWeight.checked){
+      const W = mass * g;
+      const wLen = W * forceScale;
+      gDrawArrow(cCtx, bobX, bobY, bobX, bobY + wLen, '#f87171');
+      gDrawLabel(cCtx, 'W = mg (' + W.toFixed(1) + 'N)', bobX + 10, bobY + wLen - 5, '#f87171');
+    }
+
+    // 2. Centripetal Force Vector (Fc) - pointing to circle center horizontally
+    if (showFc.checked){
+      const fcLen = Fc * forceScale;
+      const angleToCenter = Math.atan2(circleCenterY - bobY, apexX - bobX);
+      const fcX = bobX + fcLen * Math.cos(angleToCenter);
+      const fcY = bobY + fcLen * Math.sin(angleToCenter);
+
+      gDrawArrow(cCtx, bobX, bobY, fcX, fcY, '#c084fc');
+      gDrawLabel(cCtx, 'Fc (' + Fc.toFixed(1) + 'N)', (bobX + fcX) / 2 - 15, (bobY + fcY) / 2 + 15, '#c084fc');
+    }
+
+    // 3. Tension Components (Tx and Ty)
+    if (showComponents.checked){
+      const Tx = Fc;
+      const Ty = mass * g;
+
+      const txLen = Tx * forceScale;
+      const tyLen = Ty * forceScale;
+
+      // Ty Component (Upward vertical)
+      const angleToApexX = apexX - bobX;
+      const txDir = angleToApexX >= 0 ? 1 : -1;
+      gDrawArrow(cCtx, bobX, bobY, bobX, bobY - tyLen, '#4ade80', 2);
+      gDrawLabel(cCtx, 'T cos θ (' + Ty.toFixed(1) + 'N)', bobX - 90, bobY - tyLen + 15, '#4ade80');
+
+      // Tx Component (Horizontal towards center)
+      gDrawArrow(cCtx, bobX, bobY, bobX + txLen * txDir, bobY, '#38bdf8', 2);
+      gDrawLabel(cCtx, 'T sin θ (' + Tx.toFixed(1) + 'N)', bobX + (txDir * txLen) / 2 - 20, bobY - 10, '#38bdf8');
+    }
+
+    // 4. Tension Vector (T) - pointing along the string toward apex
+    if (showTension.checked){
+      const tLen = tension * forceScale;
+      const dx = apexX - bobX;
+      const dy = apexY - bobY;
+      const dist = Math.hypot(dx, dy);
+      const tX = bobX + (dx / dist) * tLen;
+      const tY = bobY + (dy / dist) * tLen;
+
+      gDrawArrow(cCtx, bobX, bobY, tX, tY, '#f59e0b', 3.5);
+      gDrawLabel(cCtx, 'T Tension (' + tension.toFixed(1) + 'N)', tX + 10, tY, '#f59e0b');
+    }
+
+    // 5. Tangential Velocity Vector (v)
+    if (showConicalVel.checked){
+      const vScale = 18;
+      const vx = -Math.sin(conicalPhi) * vLinear * vScale;
+      const vy = -Math.cos(conicalPhi) * vLinear * vScale * tiltFactor;
+
+      gDrawArrow(cCtx, bobX, bobY, bobX + vx, bobY + vy, '#38bdf8', 2.5);
+      gDrawLabel(cCtx, 'v = ' + vLinear.toFixed(2) + 'm/s', bobX + vx + 8, bobY + vy, '#38bdf8');
+    }
+
+    // Draw Pendulum Bob Mass Sphere
+    const bobRadius = 10 + mass * 2.5;
+    const sphereGrad = cCtx.createRadialGradient(
+      bobX - bobRadius * 0.3, bobY - bobRadius * 0.3, bobRadius * 0.1,
+      bobX, bobY, bobRadius
+    );
+    sphereGrad.addColorStop(0, '#fde047');
+    sphereGrad.addColorStop(0.7, '#eab308');
+    sphereGrad.addColorStop(1, '#713f12');
+
+    cCtx.fillStyle = sphereGrad;
+    cCtx.strokeStyle = '#fef08a';
+    cCtx.lineWidth = 1.5;
+    cCtx.beginPath();
+    cCtx.arc(bobX, bobY, bobRadius, 0, Math.PI * 2);
+    cCtx.fill();
+    cCtx.stroke();
+
+    gDrawLabel(cCtx, 'm = ' + mass.toFixed(1) + 'kg', bobX - 25, bobY + bobRadius + 16, '#fef08a');
+
+    requestAnimationFrame(renderConicalPendulum);
+  }
+  requestAnimationFrame(renderConicalPendulum);
+}
+
+
+/* ---------- Enrichment 1: vertical circular motion ---------- */
+function initSim5(){
+  const cv = document.getElementById('sim5Canvas'), ctx = cv.getContext('2d');
+  const rEl=document.getElementById('s5_r'), mEl=document.getElementById('s5_m'), vEl=document.getElementById('s5_v');
+  const showT=document.getElementById('s5_show_t'), showW=document.getElementById('s5_show_w');
+  const playBtn=document.getElementById('s5_playpause'), resetBtn=document.getElementById('s5_reset');
+  let ang = -Math.PI/2, running = true, dragging = false;
+  playBtn.addEventListener('click', ()=>{ running = !running; playBtn.textContent = running ? 'Pause':'Play'; });
+  resetBtn.addEventListener('click', ()=>{ ang = -Math.PI/2; });
+
+  function geom(){
+    const k = cv.width/360;
+    return { cx: cv.width/2, cy: cv.height/2, drawR: 95*k, k };
+  }
+  function pointerPos(e){
+    const rect = cv.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x:(clientX-rect.left)*(cv.width/rect.width), y:(clientY-rect.top)*(cv.height/rect.height) };
+  }
+  function nearBob(pos){
+    const { cx, cy, drawR, k } = geom();
+    const bx = cx+drawR*Math.cos(ang), by = cy+drawR*Math.sin(ang);
+    return Math.hypot(pos.x-bx, pos.y-by) < 24*k;
+  }
+  cv.addEventListener('mousedown', (e)=>{ const p=pointerPos(e); if (nearBob(p)){ dragging=true; running=false; playBtn.textContent='Play'; } });
+  cv.addEventListener('mousemove', (e)=>{ const { cx, cy } = geom(); const p=pointerPos(e); cv.style.cursor = nearBob(p)?'grab':'default'; if(dragging) ang = Math.atan2(p.y-cy, p.x-cx); });
+  window.addEventListener('mouseup', ()=>{ dragging=false; });
+  cv.addEventListener('touchstart', (e)=>{ const p=pointerPos(e); if (nearBob(p)){ dragging=true; running=false; playBtn.textContent='Play'; } e.preventDefault(); }, {passive:false});
+  cv.addEventListener('touchmove', (e)=>{ if(dragging){ const { cx, cy } = geom(); const p=pointerPos(e); ang = Math.atan2(p.y-cy, p.x-cx); } e.preventDefault(); }, {passive:false});
+  window.addEventListener('touchend', ()=>{ dragging=false; });
+
+  function draw(){
+    const { cx, cy, drawR, k } = geom();
+    const r=parseFloat(rEl.value), m=parseFloat(mEl.value), vTop=parseFloat(vEl.value);
+    const vMin = Math.sqrt(G*r);
+    document.getElementById('s5_r_val').textContent=fmt(r,2)+' m';
+    document.getElementById('s5_m_val').textContent=fmt(m,2)+' kg';
+    document.getElementById('s5_v_val').textContent=fmt(vTop,2)+' m/s';
+    document.getElementById('s5_out_min').textContent=fmt(vMin,2)+' m/s';
+    const statusEl=document.getElementById('s5_out_status');
+    if (vTop>=vMin){ statusEl.textContent='Maintains contact ✓'; statusEl.style.color=getCSS('--teal-500'); }
+    else { statusEl.textContent='Loses contact before top ✗'; statusEl.style.color=getCSS('--danger'); }
+
+    // energy-based speed at current angle using vTop as reference at top (ang=-90deg)
+    const yFromCenter = r*Math.sin(ang); // -r at top(ang=-90), +r at bottom(ang=90)
+    const hTop = -r; // height of top relative to centre
+    const dh = yFromCenter - hTop; // drop from top to current point (positive going down)
+    const vSq = Math.max(vTop*vTop + 2*G*dh, 0.01);
+    const v = Math.sqrt(vSq);
+
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle='rgba(94,234,212,0.3)'; ctx.lineWidth=1.5*k;
+    ctx.beginPath(); ctx.arc(cx,cy,drawR,0,2*Math.PI); ctx.stroke();
+    const px = cx+drawR*Math.cos(ang), py=cy+drawR*Math.sin(ang);
+    ctx.fillStyle='#E8CD6B';
+    ctx.beginPath(); ctx.arc(px,py,8*k,0,2*Math.PI); ctx.fill();
+
+    // tension/normal points toward centre; weight points down always
+    const arrowLen=36*k;
+    if (showT.checked){
+      const dirx=(cx-px)/drawR, diry=(cy-py)/drawR;
+      drawArrow(ctx,px,py,px+dirx*arrowLen,py+diry*arrowLen, getCSS('--arrow-tension'),3*k);
+    }
+    if (showW.checked){
+      drawArrow(ctx,px,py,px,py+arrowLen, getCSS('--arrow-weight'),3*k);
+    }
+    labelAt(ctx,'top', cx-10*k, cy-drawR-10*k, '#8AA0BE');
+    labelAt(ctx,'bottom', cx-18*k, cy+drawR+18*k, '#8AA0BE');
+
+    ang += (running && !dragging) ? (v/drawR)*0.4 : 0;
+    if (ang > 1.5*Math.PI) ang -= 2*Math.PI;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ============================================================
+   BOOTSTRAP
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const main = document.getElementById('main');
+  Object.keys(PAGES).forEach(key=>{
+    const div = document.createElement('div');
+    div.className = 'page';
+    div.id = 'page-'+key;
+    div.innerHTML = PAGES[key];
+    main.appendChild(div);
+  });
+
+  document.querySelectorAll('.navlist button').forEach(btn=>{
+    btn.addEventListener('click', ()=> showPage(btn.dataset.page));
+  });
+  // event delegation for in-page next/back/jump buttons
+  main.addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-goto]');
+    if (b){ showPage(b.dataset.goto); }
+  });
+
+  document.getElementById('simBackdrop').addEventListener('click', ()=>{ if (__expandedPanel) collapseSimPanel(__expandedPanel); });
+  showPage('p1');
+});
+
+</script>
+</body>
+</html>
